@@ -8,18 +8,15 @@ using System.Threading.Tasks;
 
 namespace EC05_C_sharp_Case_mgmt_wpf.Contexts
 {
-    class ApplicationDbContext : DbContext
+    class DataContext : DbContext
     {
         private readonly string _connectionString = @"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=C:\Users\Elias\Downloads\EC-utbildning-webbutvecklare-NET\05-Datalagring\EC05-Databases\EC05_C-sharp-Case-mgmt\EC05_C-sharp-Case-mgmt-wpf\Contexts\sql_case_db.mdf;Integrated Security=True;Connect Timeout=30";
-        public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
+        public DataContext()
         {
         }
-
-        public ApplicationDbContext()
+        public DataContext(DbContextOptions<DataContext> options) : base(options)
         {
-            
         }
-
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             if (!optionsBuilder.IsConfigured)
@@ -28,6 +25,6 @@ namespace EC05_C_sharp_Case_mgmt_wpf.Contexts
             }
         }
 
-        public DbSet<CustomerEntity> Customers { get; set; }
+        public virtual DbSet<CustomerEntity> Customers { get; set; }
     }
 }
