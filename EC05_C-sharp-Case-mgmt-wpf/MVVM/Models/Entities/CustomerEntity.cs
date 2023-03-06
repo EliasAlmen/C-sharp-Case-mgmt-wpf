@@ -17,6 +17,7 @@ namespace EC05_C_sharp_Case_mgmt_wpf.MVVM.Models.Entities
         public string LastName { get; set; } = string.Empty;
         [StringLength(200)]
         public string Email { get; set; } = string.Empty;
+        [StringLength(13)]
         public string PhoneNumber { get; set; } = string.Empty;
         public string Description { get; set; } = string.Empty;
         public DateTime Created { get; set; } = DateTime.Now;
