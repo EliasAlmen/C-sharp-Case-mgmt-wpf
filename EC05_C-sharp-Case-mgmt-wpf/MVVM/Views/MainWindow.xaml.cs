@@ -1,4 +1,6 @@
-﻿using System;
+﻿using EC05_C_sharp_Case_mgmt_wpf.MVVM.ViewModels;
+using Microsoft.Extensions.DependencyInjection;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -23,6 +25,8 @@ namespace EC05_C_sharp_Case_mgmt_wpf
         public MainWindow()
         {
             InitializeComponent();
+            // Get the MainViewModel
+            this.DataContext = App.Current.Services.GetService<MainViewModel>();
         }
     }
 }

@@ -8,7 +8,61 @@
         d:DataContext="{d:DesignInstance Type=viewmodels:MainViewModel}"
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
-    <Grid>
+    <Grid Margin="10">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+        <ListView
+            Grid.Column="0"
+            x:Name="contactList" 
+            ItemsSource="{Binding Cases}"  
+            Margin="0 0 0 25" 
+            Background="White" 
+            SelectionMode="Single">
+            <ListView.View>
+                <GridView>
+                    <GridViewColumn Header="Id" Width="auto" DisplayMemberBinding="{Binding Id}" />
+                    <GridViewColumn Header="First name" Width="auto" DisplayMemberBinding="{Binding FirstName}" />
+                    <GridViewColumn Header="Last name" Width="auto" DisplayMemberBinding="{Binding LastName}" />
+                    <GridViewColumn Header="Email" Width="auto">
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding Email}" TextDecorations="Underline" Foreground="Blue" Cursor="Hand" />
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+                    <GridViewColumn Header="Created" Width="auto" DisplayMemberBinding="{Binding Created}" />
+                    <GridViewColumn Header="Description" Width="auto" DisplayMemberBinding="{Binding Description}" />
+                </GridView>
+            </ListView.View>
+        </ListView>
+        <StackPanel 
+            Grid.Column="1"
+            Margin="10">
+            <TextBlock Text="{Binding Tb_firstName}" />
+            <TextBox Text="{Binding FirstName}" Padding="5" Margin="0 0 0 5" />
+            <TextBlock Text="{Binding Tb_lastName}" />
+            <TextBox Text="{Binding LastName}" Padding="5" Margin="0 0 0 5" />
+            <TextBlock Text="{Binding Tb_email}" />
+            <TextBox Text="{Binding Email}" Padding="5" Margin="0 0 0 5" />
+            <TextBlock Text="{Binding Tb_phoneNumber}" />
+            <TextBox Text="{Binding PhoneNumber}" Padding="5" Margin="0 0 0 5" />
+            <TextBlock Text="{Binding Tb_description}" />
+            <TextBox
+                MaxLength="500"
+                MinLines="1" 
+                MaxLines="5"
+                Height="75"
+                Name="tb_Description"
+                TextWrapping="Wrap"
+                AcceptsReturn="True"
+                VerticalScrollBarVisibility="Visible"
+                Text="{Binding Description}" 
+                Padding="5" 
+                Margin="0 0 0 5" />
+            <Button Command="{Binding AddCaseCommand}" Content="Add Case" Margin="0 20 0 0" Padding="8" Width="100"/>
 
+        </StackPanel>
     </Grid>
 </Window>
