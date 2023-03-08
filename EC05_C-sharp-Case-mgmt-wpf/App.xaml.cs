@@ -44,7 +44,7 @@ namespace EC05_C_sharp_Case_mgmt_wpf
 
         protected override void OnStartup(StartupEventArgs e)
         {
-            var datacontext = Services.GetService<DataContext>();
+            var datacontext = Services.GetRequiredService<DataContext>();
             var mainWindow = Services.GetRequiredService<MainWindow>(); 
             mainWindow.DataContext = new MainViewModel(datacontext!);
             mainWindow.Show();
