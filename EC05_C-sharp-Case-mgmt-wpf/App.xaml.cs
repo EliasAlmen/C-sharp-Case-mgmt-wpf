@@ -1,5 +1,6 @@
 ﻿using EC05_C_sharp_Case_mgmt_wpf.Contexts;
 using EC05_C_sharp_Case_mgmt_wpf.MVVM.ViewModels;
+using EC05_C_sharp_Case_mgmt_wpf.MVVM.Views;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
@@ -35,9 +36,11 @@ namespace EC05_C_sharp_Case_mgmt_wpf
 
             // ViewModels
             services.AddTransient<MainViewModel>();
+            services.AddTransient<CaseDetailsViewModel>();
 
             //Views
             services.AddTransient<MainWindow>();
+            services.AddTransient<CaseDetailsWindow>();
 
             return services.BuildServiceProvider();
         }

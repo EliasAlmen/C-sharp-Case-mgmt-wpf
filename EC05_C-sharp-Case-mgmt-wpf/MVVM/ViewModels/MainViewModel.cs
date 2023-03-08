@@ -25,7 +25,7 @@ namespace EC05_C_sharp_Case_mgmt_wpf.MVVM.ViewModels
             LoadOpenCases();
             LoadClosedCases();
         }
-
+        
         #region ADD CASE
         [ObservableProperty]
         private string firstName = string.Empty;
