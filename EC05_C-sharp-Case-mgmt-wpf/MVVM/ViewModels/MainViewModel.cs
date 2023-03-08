@@ -22,7 +22,8 @@ namespace EC05_C_sharp_Case_mgmt_wpf.MVVM.ViewModels
         public MainViewModel(DataContext dataContext)
         {
             _DataContext = dataContext;
-            LoadCases();
+            LoadOpenCases();
+            LoadClosedCases();
         }
 
         #region ADD CASE
@@ -52,6 +53,8 @@ namespace EC05_C_sharp_Case_mgmt_wpf.MVVM.ViewModels
         private string tb_description = "Case description";
         [ObservableProperty]
         private string tb_Description_text = "Max 500 characters";
+        [ObservableProperty]
+        private bool isDone;
 
         [RelayCommand]
         private async void AddCase()
@@ -75,6 +78,7 @@ namespace EC05_C_sharp_Case_mgmt_wpf.MVVM.ViewModels
                 caseModel.Email = Email;
                 caseModel.PhoneNumber = PhoneNumber;
                 caseModel.Description = Description;
+                caseModel.IsDone = IsDone;
 
                 //save customer to database
                 await CaseService.SaveAsync(caseModel);
@@ -90,7 +94,7 @@ namespace EC05_C_sharp_Case_mgmt_wpf.MVVM.ViewModels
 
                 // Confirmation MessageBox
                 //MessageBox.Show($"{FirstName}\n{LastName}\n\nAdded.");
-                LoadCases();
+                LoadOpenCases();
 
             }
         }
@@ -102,21 +106,58 @@ namespace EC05_C_sharp_Case_mgmt_wpf.MVVM.ViewModels
         /// </summary>
         [ObservableProperty]
         public ObservableCollection<CustomerEntity> cases = new();
-
         /// <summary>
         /// Loads existing ToDos from the DataContext
         /// </summary>
-        private void LoadCases()
+        private void LoadOpenCases()
         {
             Cases.Clear();
-            var todos = _DataContext!.Customers.Where(o => !o.IsDone).ToList();
-            todos.ForEach(o =>
+            var _cases = _DataContext!.Customers.Where(o => !o.IsDone).ToList();
+            _cases.ForEach(o =>
             {
                 Cases.Add(o);
             });
         }
 
-        
+        /// <summary>
+        /// Observable property with INotifyChanged created by source generators
+        /// </summary>
+        [ObservableProperty]
+        public ObservableCollection<CustomerEntity> caseClose = new();
+        private void LoadClosedCases()
+        {
+            CaseClose.Clear();
+            var _cases = _DataContext!.Customers.Where(o => o.IsDone).ToList();
+            _cases.ForEach(o =>
+            {
+                CaseClose.Add(o);
+            });
+        }
+
+        /// <summary>
+        /// MarkToDoAsCompleteCommand RelayCommand
+        /// </summary>
+        /// <param name="dwdw">The ToDo to mark as compelte</param>
+        [RelayCommand]
+        private void ChangeCaseStatus(CustomerEntity customer)
+        {
+            if (customer.IsDone == false)
+            {
+                customer.IsDone = false;
+                _DataContext.Customers.Update(customer);
+                _DataContext.SaveChanges();
+                LoadOpenCases();
+                LoadClosedCases();
+            }
+            if (customer.IsDone == true)
+            {
+                customer.IsDone = true;
+                _DataContext.Customers.Update(customer);
+                _DataContext.SaveChanges();
+                LoadOpenCases();
+                LoadClosedCases();
+            }
+        }
 
     }
 }

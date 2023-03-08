@@ -22,29 +22,30 @@ namespace EC05_C_sharp_Case_mgmt_wpf.Services
                 LastName = caseModel.LastName,
                 Email = caseModel.Email,
                 PhoneNumber = caseModel.PhoneNumber,
-                Description = caseModel.Description
+                Description = caseModel.Description,
+                IsDone = caseModel.IsDone
             };
 
             _context.Add(_customerEntity);
             await _context.SaveChangesAsync();
         }
 
-        public static async Task<IEnumerable<CaseModel>> GetAllAsync()
-        {
-            var _customers = new List<CaseModel>();
-            foreach (var _customer in await _context.Customers.Include(x => x.Id).ToListAsync())
-                _customers.Add(new CaseModel
-                {
-                    Id = _customer.Id,
-                    FirstName = _customer.FirstName,
-                    LastName = _customer.LastName,
-                    Email = _customer.Email,
-                    PhoneNumber = _customer.PhoneNumber,
-                    Description = _customer.Description,
-                    Created = _customer.Created
+        //public static async Task<IEnumerable<CaseModel>> GetAllAsync()
+        //{
+        //    var _customers = new List<CaseModel>();
+        //    foreach (var _customer in await _context.Customers.Include(x => x.Id).ToListAsync())
+        //        _customers.Add(new CaseModel
+        //        {
+        //            Id = _customer.Id,
+        //            FirstName = _customer.FirstName,
+        //            LastName = _customer.LastName,
+        //            Email = _customer.Email,
+        //            PhoneNumber = _customer.PhoneNumber,
+        //            Description = _customer.Description,
+        //            Created = _customer.Created
 
-                });
-            return _customers;
-        }
+        //        });
+        //    return _customers;
+        //}
     }
 }

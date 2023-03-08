@@ -7,19 +7,25 @@
         xmlns:viewmodels="clr-namespace:EC05_C_sharp_Case_mgmt_wpf.MVVM.ViewModels"
         d:DataContext="{d:DesignInstance Type=viewmodels:MainViewModel}"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+        Title="MainWindow" Height="450" Width="1600">
     <Grid Margin="10">
         <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="250" />
             <ColumnDefinition Width="*" />
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
         <ListView
-            Grid.Column="0"
+            Grid.Column="1"
             x:Name="contactList" 
             ItemsSource="{Binding Cases}"  
             Margin="0 0 0 25" 
             Background="White" 
             SelectionMode="Single">
+            <ListView.Resources>
+                <Style TargetType="ListViewItem">
+                    <EventSetter Event="MouseDoubleClick" Handler="ListViewItem_MouseDoubleClick" />
+                </Style>
+            </ListView.Resources>
             <ListView.View>
                 <GridView>
                     <GridViewColumn Header="Id" Width="auto" DisplayMemberBinding="{Binding Id}" />
@@ -34,11 +40,22 @@
                     </GridViewColumn>
                     <GridViewColumn Header="Created" Width="auto" DisplayMemberBinding="{Binding Created}" />
                     <GridViewColumn Header="Description" Width="auto" DisplayMemberBinding="{Binding Description}" />
+                    <GridViewColumn Header="Status" Width="auto" DisplayMemberBinding="{Binding IsDone}" />
+                    <GridViewColumn Header="Completed" Width="auto">
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <CheckBox 
+                                    Command="{Binding DataContext.ChangeCaseStatusCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type local:MainWindow}}}"
+                                    CommandParameter="{Binding}"
+                                    IsChecked="{Binding IsDone}" />
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
                 </GridView>
             </ListView.View>
         </ListView>
-        <StackPanel 
-            Grid.Column="1"
+        <StackPanel
+            Grid.Column="0"
             Margin="10">
             <TextBlock Text="{Binding Tb_firstName}" />
             <TextBox Text="{Binding FirstName}" Padding="5" Margin="0 0 0 5" />
@@ -62,7 +79,41 @@
                 Padding="5" 
                 Margin="0 0 0 5" />
             <Button Command="{Binding AddCaseCommand}" Content="Add Case" Margin="0 20 0 0" Padding="8" Width="100"/>
-
         </StackPanel>
+        <ListView
+            Grid.Column="2"
+            x:Name="contactListClosed" 
+            ItemsSource="{Binding CaseClose}"  
+            Margin="0 0 0 25" 
+            Background="White" 
+            SelectionMode="Single">
+            <ListView.View>
+                <GridView>
+                    <GridViewColumn Header="Id" Width="auto" DisplayMemberBinding="{Binding Id}" />
+                    <GridViewColumn Header="First name" Width="auto" DisplayMemberBinding="{Binding FirstName}" />
+                    <GridViewColumn Header="Last name" Width="auto" DisplayMemberBinding="{Binding LastName}" />
+                    <GridViewColumn Header="Email" Width="auto">
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding Email}" TextDecorations="Underline" Foreground="Blue" Cursor="Hand" />
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+                    <GridViewColumn Header="Created" Width="auto" DisplayMemberBinding="{Binding Created}" />
+                    <GridViewColumn Header="Description" Width="auto" DisplayMemberBinding="{Binding Description}" />
+                    <GridViewColumn Header="Status" Width="auto" DisplayMemberBinding="{Binding IsDone}" />
+                    <GridViewColumn Header="Completed" Width="auto">
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <CheckBox 
+                                    Command="{Binding DataContext.ChangeCaseStatusCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type local:MainWindow}}}"
+                                    CommandParameter="{Binding}"
+                                    IsChecked="{Binding IsDone}" />
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+                </GridView>
+            </ListView.View>
+        </ListView>
     </Grid>
 </Window>

@@ -1,4 +1,6 @@
-﻿using EC05_C_sharp_Case_mgmt_wpf.MVVM.ViewModels;
+﻿using EC05_C_sharp_Case_mgmt_wpf.MVVM.Models;
+using EC05_C_sharp_Case_mgmt_wpf.MVVM.Models.Entities;
+using EC05_C_sharp_Case_mgmt_wpf.MVVM.ViewModels;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
@@ -22,11 +24,31 @@ namespace EC05_C_sharp_Case_mgmt_wpf
     /// </summary>
     public partial class MainWindow : Window
     {
+
         public MainWindow()
         {
             InitializeComponent();
             // Get the MainViewModel
             this.DataContext = App.Current.Services.GetService<MainViewModel>();
+        }
+
+        private void ListViewItem_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+        {
+            var item = (ListViewItem)sender;
+            var caseItem = (CustomerEntity)item.DataContext;
+
+            string messageBoxText = 
+                $"{caseItem.FirstName}" + " " + $"{caseItem.LastName}\n" +
+                $"{caseItem.Email}\n" +
+                $"{caseItem.PhoneNumber}\n\n" +
+                $"Case description:\n{caseItem.Description}\n\n" +
+                $"Case status: {caseItem.IsDone}";
+            string caption = $"Case Id {caseItem.Id}";
+            MessageBoxButton button = MessageBoxButton.OK;
+            MessageBoxImage icon = MessageBoxImage.Information;
+            MessageBoxResult result;
+
+            result = MessageBox.Show(messageBoxText, caption, button, icon);
         }
     }
 }
