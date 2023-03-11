@@ -1,4 +1,5 @@
 ﻿using EC05_C_sharp_Case_mgmt_wpf.Contexts;
+using EC05_C_sharp_Case_mgmt_wpf.Helpers;
 using EC05_C_sharp_Case_mgmt_wpf.MVVM.ViewModels;
 using EC05_C_sharp_Case_mgmt_wpf.MVVM.Views;
 using Microsoft.Extensions.DependencyInjection;
@@ -33,6 +34,7 @@ namespace EC05_C_sharp_Case_mgmt_wpf
 
             // DataContext
             services.AddTransient<DataContext>();
+            services.AddTransient<BooleanHelper>();
 
             // ViewModels
             services.AddTransient<MainViewModel>();

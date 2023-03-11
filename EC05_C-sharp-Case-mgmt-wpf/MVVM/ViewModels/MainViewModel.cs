@@ -1,10 +1,13 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using EC05_C_sharp_Case_mgmt_wpf.Contexts;
+using EC05_C_sharp_Case_mgmt_wpf.Migrations;
 using EC05_C_sharp_Case_mgmt_wpf.MVVM.Models;
 using EC05_C_sharp_Case_mgmt_wpf.MVVM.Models.Entities;
+using EC05_C_sharp_Case_mgmt_wpf.MVVM.Views;
 using EC05_C_sharp_Case_mgmt_wpf.Services;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -24,9 +27,12 @@ namespace EC05_C_sharp_Case_mgmt_wpf.MVVM.ViewModels
             _DataContext = dataContext;
             LoadOpenCases();
             LoadClosedCases();
+            ValueDone = IsDone ? "Open" : "Closed";
         }
         
-        #region ADD CASE
+        //todo: In case closed list add column for datetime -> closed.
+        //todo: In case open list add column for pickuped / datetime pickuped
+
         [ObservableProperty]
         private string firstName = string.Empty;
         [ObservableProperty]
@@ -55,7 +61,14 @@ namespace EC05_C_sharp_Case_mgmt_wpf.MVVM.ViewModels
         private string tb_Description_text = "Max 500 characters";
         [ObservableProperty]
         private bool isDone;
+        [ObservableProperty]
+        private string valueDone;
+        [ObservableProperty]
+        private DateTime created;
 
+        
+
+        #region Add case panel
         [RelayCommand]
         private async void AddCase()
         {
@@ -100,7 +113,7 @@ namespace EC05_C_sharp_Case_mgmt_wpf.MVVM.ViewModels
         }
         #endregion
 
-
+        #region Load cases
         /// <summary>
         /// Observable property with INotifyChanged created by source generators
         /// </summary>
@@ -133,31 +146,163 @@ namespace EC05_C_sharp_Case_mgmt_wpf.MVVM.ViewModels
                 CaseClose.Add(o);
             });
         }
+        #endregion
 
+        #region Change status of case
         /// <summary>
-        /// MarkToDoAsCompleteCommand RelayCommand
+        /// Updates the status with if-states 
         /// </summary>
-        /// <param name="dwdw">The ToDo to mark as compelte</param>
+        /// <param name="customer"></param>
         [RelayCommand]
         private void ChangeCaseStatus(CustomerEntity customer)
         {
-            if (customer.IsDone == false)
+            string messageBoxText = "Case completed?\n\n";
+            string caption = $"Edit";
+            MessageBoxButton button = MessageBoxButton.YesNo;
+            MessageBoxImage icon = MessageBoxImage.Question;
+            MessageBoxResult result;
+            result = MessageBox.Show(messageBoxText, caption, button, icon);
+
+            switch (result)
             {
-                customer.IsDone = false;
-                _DataContext.Customers.Update(customer);
-                _DataContext.SaveChanges();
-                LoadOpenCases();
-                LoadClosedCases();
+                case MessageBoxResult.Yes:
+                        customer.IsDone = true;
+                        //_DataContext.Customers.Update(customer);
+                        _DataContext.SaveChanges();
+                        LoadOpenCases();
+                        LoadClosedCases();
+                    break;
+                case MessageBoxResult.No:
+                        customer.IsDone = false;
+                        //_DataContext.Customers.Update(customer);
+                        _DataContext.SaveChanges();
+                        LoadOpenCases();
+                        LoadClosedCases();
+                    break;
             }
-            if (customer.IsDone == true)
+            
+            
+        }
+        #endregion
+
+        #region DELETE & UPDATE
+        [ObservableProperty]
+        private CustomerEntity selectedCaseItem;
+        [RelayCommand]
+        private void DeleteSelected(CustomerEntity customer)
+        {
+            customer = SelectedCaseItem;
+            string messageBoxText =
+                "Delete case?\n\n" +
+                $"{customer.FirstName}" + " " + $"{customer.LastName}\n" +
+                $"{customer.Email}\n" +
+                $"{customer.PhoneNumber}\n\n" +
+                $"Case description:\n{customer.Description}\n\n" +
+                $"Case status: {customer.IsDone}";
+            string caption = $"Case Id {customer.Id}";
+            MessageBoxButton button = MessageBoxButton.YesNo;
+            MessageBoxImage icon = MessageBoxImage.Warning;
+            MessageBoxResult result;
+            result = MessageBox.Show(messageBoxText, caption, button, icon);
+            switch (result)
             {
-                customer.IsDone = true;
-                _DataContext.Customers.Update(customer);
-                _DataContext.SaveChanges();
-                LoadOpenCases();
-                LoadClosedCases();
+                case MessageBoxResult.Yes:
+                    _DataContext.Customers.Remove(customer);
+                    _DataContext.SaveChanges();
+                    LoadOpenCases();
+                    LoadClosedCases();
+                    break;
+                case MessageBoxResult.No:
+                    // User pressed No
+                    break;
             }
         }
+        [RelayCommand]
+        private void UpdateSelected(CustomerEntity customer)
+        {
+            string messageBoxText = "Update case?\n\n";
+            string caption = $"Edit";
+            MessageBoxButton button = MessageBoxButton.YesNo;
+            MessageBoxImage icon = MessageBoxImage.Question;
+            MessageBoxResult result;
+            result = MessageBox.Show(messageBoxText, caption, button, icon);
 
+            switch (result)
+            {
+                case MessageBoxResult.Yes:
+                    customer = SelectedCaseItem;
+                    _DataContext.Customers.Update(customer);
+                    _DataContext.SaveChanges();
+                    LoadOpenCases();
+                    LoadClosedCases();
+                    break;
+                case MessageBoxResult.No:
+                    break;
+            }
+        }
+        #endregion
+
+        #region LOCK & UNLOCK
+        [ObservableProperty]
+        private bool lock_firstname;
+        [ObservableProperty]
+        private bool lock_lastname;
+        [ObservableProperty]
+        private bool lock_email;
+        [ObservableProperty]
+        private bool lock_phonenumber;
+        [ObservableProperty]
+        private bool lock_description;
+        [ObservableProperty]
+        private string btn_unlock = "Unlock case";
+        [ObservableProperty]
+        private bool btn_enable_delete = false;
+        [ObservableProperty]
+        private bool btn_enable_update = false;
+        [RelayCommand]
+        private void UnlockSelected()
+        {
+            if (Lock_firstname == true)
+            {
+                Lock_firstname = false;
+                Lock_lastname = false;
+                Lock_email = false;
+                Lock_phonenumber = false;
+                Lock_description = false;
+                Btn_unlock = "Unlock case";
+                Btn_enable_delete = false;
+                Btn_enable_update = false;
+            }
+            else
+            {
+                string messageBoxText = "Unlock case?\n\n";
+                string caption = $"Edit";
+                MessageBoxButton button = MessageBoxButton.YesNo;
+                MessageBoxImage icon = MessageBoxImage.Warning;
+                MessageBoxResult result;
+                result = MessageBox.Show(messageBoxText, caption, button, icon);
+
+                switch (result)
+                {
+                    case MessageBoxResult.Yes:
+                        Lock_firstname = true;
+                        Lock_lastname = true;
+                        Lock_email = true;
+                        Lock_phonenumber = true;
+                        Lock_description = true;
+                        Btn_unlock = "Lock case";
+                        Btn_enable_delete = true;
+                        Btn_enable_update = true;
+                        break;
+                    case MessageBoxResult.No:
+                        // User pressed No
+                        break;
+                }
+            }
+            
+
+            
+        }
+        #endregion
     }
 }

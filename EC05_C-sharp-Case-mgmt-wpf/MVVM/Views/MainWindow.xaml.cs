@@ -1,4 +1,6 @@
-﻿using EC05_C_sharp_Case_mgmt_wpf.MVVM.Models;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
+using EC05_C_sharp_Case_mgmt_wpf.MVVM.Models;
 using EC05_C_sharp_Case_mgmt_wpf.MVVM.Models.Entities;
 using EC05_C_sharp_Case_mgmt_wpf.MVVM.ViewModels;
 using EC05_C_sharp_Case_mgmt_wpf.MVVM.Views;
@@ -53,8 +55,8 @@ namespace EC05_C_sharp_Case_mgmt_wpf
             //MessageBoxButton button = MessageBoxButton.OK;
             //MessageBoxImage icon = MessageBoxImage.Information;
             //MessageBoxResult result;
-
             //result = MessageBox.Show(messageBoxText, caption, button, icon);
         }
+
     }
 }

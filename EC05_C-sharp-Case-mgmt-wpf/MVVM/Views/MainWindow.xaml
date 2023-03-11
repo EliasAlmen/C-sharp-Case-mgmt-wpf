@@ -1,25 +1,76 @@
-﻿<Window x:Class="EC05_C_sharp_Case_mgmt_wpf.MainWindow"
-        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:EC05_C_sharp_Case_mgmt_wpf"
-        xmlns:viewmodels="clr-namespace:EC05_C_sharp_Case_mgmt_wpf.MVVM.ViewModels"
-        d:DataContext="{d:DesignInstance Type=viewmodels:MainViewModel}"
-        mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="1600">
+﻿<Window
+    x:Class="EC05_C_sharp_Case_mgmt_wpf.MainWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:helpers="clr-namespace:EC05_C_sharp_Case_mgmt_wpf.Helpers"
+    xmlns:local="clr-namespace:EC05_C_sharp_Case_mgmt_wpf"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:viewmodels="clr-namespace:EC05_C_sharp_Case_mgmt_wpf.MVVM.ViewModels"
+    Title="Case system"
+    Width="1600"
+    Height="450"
+    d:DataContext="{d:DesignInstance Type=viewmodels:MainViewModel}"
+    WindowStartupLocation="CenterScreen"
+    mc:Ignorable="d">
+    <Window.Resources>
+        <helpers:BooleanHelper x:Key="BooleanHelper" />
+    </Window.Resources>
     <Grid Margin="10">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="250" />
             <ColumnDefinition Width="*" />
             <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
+        <StackPanel Grid.Column="0" Margin="10">
+            <TextBlock Text="{Binding Tb_firstName}" />
+            <TextBox
+                Margin="0,0,0,5"
+                Padding="5"
+                Text="{Binding FirstName}" />
+            <TextBlock Text="{Binding Tb_lastName}" />
+            <TextBox
+                Margin="0,0,0,5"
+                Padding="5"
+                Text="{Binding LastName}" />
+            <TextBlock Text="{Binding Tb_email}" />
+            <TextBox
+                Margin="0,0,0,5"
+                Padding="5"
+                Text="{Binding Email}" />
+            <TextBlock Text="{Binding Tb_phoneNumber}" />
+            <TextBox
+                Margin="0,0,0,5"
+                Padding="5"
+                Text="{Binding PhoneNumber}" />
+            <TextBlock Text="{Binding Tb_description}" />
+            <TextBox
+                Name="tb_Description"
+                Height="75"
+                Margin="0,0,0,5"
+                Padding="5"
+                AcceptsReturn="True"
+                MaxLength="500"
+                MaxLines="5"
+                MinLines="1"
+                Text="{Binding Description}"
+                TextWrapping="Wrap"
+                VerticalScrollBarVisibility="Visible" />
+            <Button
+                Width="100"
+                Margin="0,20,0,0"
+                Padding="8"
+                Command="{Binding AddCaseCommand}"
+                Content="Add Case" />
+        </StackPanel>
         <ListView
+            x:Name="contactList"
             Grid.Column="1"
-            x:Name="contactList" 
-            ItemsSource="{Binding Cases}"  
-            Margin="0 0 0 25" 
-            Background="White" 
+            Margin="0,0,0,25"
+            Background="White"
+            ItemsSource="{Binding Cases}"
+            SelectedItem="{Binding SelectedCaseItem}"
             SelectionMode="Single">
             <ListView.Resources>
                 <Style TargetType="ListViewItem">
@@ -28,23 +79,22 @@
             </ListView.Resources>
             <ListView.View>
                 <GridView>
-                    <GridViewColumn Header="Id" Width="auto" DisplayMemberBinding="{Binding Id}" />
-                    <GridViewColumn Header="First name" Width="auto" DisplayMemberBinding="{Binding FirstName}" />
-                    <GridViewColumn Header="Last name" Width="auto" DisplayMemberBinding="{Binding LastName}" />
-                    <GridViewColumn Header="Email" Width="auto">
+                    <GridViewColumn
+                        Width="auto"
+                        DisplayMemberBinding="{Binding Id}"
+                        Header="Case Id" />
+                    <GridViewColumn
+                        Width="auto"
+                        DisplayMemberBinding="{Binding Created, StringFormat='yyyy-MM-dd HH:mm'}"
+                        Header="Created" />
+                    <GridViewColumn
+                        Width="auto"
+                        DisplayMemberBinding="{Binding IsDone, Converter={StaticResource BooleanHelper}}"
+                        Header="Status" />
+                    <GridViewColumn Width="auto" Header="Completed">
                         <GridViewColumn.CellTemplate>
                             <DataTemplate>
-                                <TextBlock Text="{Binding Email}" TextDecorations="Underline" Foreground="Blue" Cursor="Hand" />
-                            </DataTemplate>
-                        </GridViewColumn.CellTemplate>
-                    </GridViewColumn>
-                    <GridViewColumn Header="Created" Width="auto" DisplayMemberBinding="{Binding Created}" />
-                    <GridViewColumn Header="Description" Width="auto" DisplayMemberBinding="{Binding Description}" />
-                    <GridViewColumn Header="Status" Width="auto" DisplayMemberBinding="{Binding IsDone}" />
-                    <GridViewColumn Header="Completed" Width="auto">
-                        <GridViewColumn.CellTemplate>
-                            <DataTemplate>
-                                <CheckBox 
+                                <CheckBox
                                     Command="{Binding DataContext.ChangeCaseStatusCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type local:MainWindow}}}"
                                     CommandParameter="{Binding}"
                                     IsChecked="{Binding IsDone}" />
@@ -54,58 +104,79 @@
                 </GridView>
             </ListView.View>
         </ListView>
-        <StackPanel
-            Grid.Column="0"
-            Margin="10">
-            <TextBlock Text="{Binding Tb_firstName}" />
-            <TextBox Text="{Binding FirstName}" Padding="5" Margin="0 0 0 5" />
-            <TextBlock Text="{Binding Tb_lastName}" />
-            <TextBox Text="{Binding LastName}" Padding="5" Margin="0 0 0 5" />
-            <TextBlock Text="{Binding Tb_email}" />
-            <TextBox Text="{Binding Email}" Padding="5" Margin="0 0 0 5" />
-            <TextBlock Text="{Binding Tb_phoneNumber}" />
-            <TextBox Text="{Binding PhoneNumber}" Padding="5" Margin="0 0 0 5" />
-            <TextBlock Text="{Binding Tb_description}" />
+        <StackPanel Grid.Column="2" Margin="25,0,25,0">
+            <TextBlock Text="First name" />
             <TextBox
-                MaxLength="500"
-                MinLines="1" 
-                MaxLines="5"
+                Margin="0,0,0,5"
+                IsEnabled="{Binding Lock_firstname}"
+                Text="{Binding SelectedItem.FirstName, ElementName=contactList}" />
+            <TextBlock Text="Last name" />
+            <TextBox
+                Margin="0,0,0,5"
+                IsEnabled="{Binding Lock_lastname}"
+                Text="{Binding SelectedItem.LastName, ElementName=contactList}" />
+            <TextBlock Text="Email" />
+            <TextBox
+                Margin="0,0,0,5"
+                IsEnabled="{Binding Lock_email}"
+                Text="{Binding SelectedItem.Email, ElementName=contactList}" />
+            <TextBlock Text="Phone number" />
+            <TextBox
+                Margin="0,0,0,5"
+                IsEnabled="{Binding Lock_phonenumber}"
+                Text="{Binding SelectedItem.PhoneNumber, ElementName=contactList}" />
+            <TextBlock Text="Case Description" />
+            <TextBox
                 Height="75"
-                Name="tb_Description"
-                TextWrapping="Wrap"
+                Margin="0,0,0,5"
                 AcceptsReturn="True"
-                VerticalScrollBarVisibility="Visible"
-                Text="{Binding Description}" 
-                Padding="5" 
-                Margin="0 0 0 5" />
-            <Button Command="{Binding AddCaseCommand}" Content="Add Case" Margin="0 20 0 0" Padding="8" Width="100"/>
+                IsEnabled="{Binding Lock_description}"
+                MaxLength="500"
+                MaxLines="5"
+                MinLines="1"
+                Text="{Binding SelectedItem.Description, ElementName=contactList}"
+                TextWrapping="Wrap"
+                VerticalScrollBarVisibility="Visible" />
+            <Button
+                Margin="10"
+                Command="{Binding UnlockSelectedCommand}"
+                Content="{Binding Btn_unlock}" />
+            <Button
+                Margin="10"
+                Command="{Binding UpdateSelectedCommand}"
+                Content="Update case"
+                IsEnabled="{Binding Btn_enable_update}" />
+            <Button
+                Margin="10"
+                Command="{Binding DeleteSelectedCommand}"
+                Content="Delete case"
+                IsEnabled="{Binding Btn_enable_delete}" />
         </StackPanel>
         <ListView
-            Grid.Column="2"
-            x:Name="contactListClosed" 
-            ItemsSource="{Binding CaseClose}"  
-            Margin="0 0 0 25" 
-            Background="White" 
+            x:Name="contactListClosed"
+            Grid.Column="3"
+            Margin="0,0,0,25"
+            Background="White"
+            ItemsSource="{Binding CaseClose}"
             SelectionMode="Single">
             <ListView.View>
                 <GridView>
-                    <GridViewColumn Header="Id" Width="auto" DisplayMemberBinding="{Binding Id}" />
-                    <GridViewColumn Header="First name" Width="auto" DisplayMemberBinding="{Binding FirstName}" />
-                    <GridViewColumn Header="Last name" Width="auto" DisplayMemberBinding="{Binding LastName}" />
-                    <GridViewColumn Header="Email" Width="auto">
+                    <GridViewColumn
+                        Width="auto"
+                        DisplayMemberBinding="{Binding Id}"
+                        Header="Id" />
+                    <GridViewColumn
+                        Width="auto"
+                        DisplayMemberBinding="{Binding Created}"
+                        Header="Created" />
+                    <GridViewColumn
+                        Width="auto"
+                        DisplayMemberBinding="{Binding IsDone, Converter={StaticResource BooleanHelper}}"
+                        Header="Status" />
+                    <GridViewColumn Width="auto" Header="Completed">
                         <GridViewColumn.CellTemplate>
                             <DataTemplate>
-                                <TextBlock Text="{Binding Email}" TextDecorations="Underline" Foreground="Blue" Cursor="Hand" />
-                            </DataTemplate>
-                        </GridViewColumn.CellTemplate>
-                    </GridViewColumn>
-                    <GridViewColumn Header="Created" Width="auto" DisplayMemberBinding="{Binding Created}" />
-                    <GridViewColumn Header="Description" Width="auto" DisplayMemberBinding="{Binding Description}" />
-                    <GridViewColumn Header="Status" Width="auto" DisplayMemberBinding="{Binding IsDone}" />
-                    <GridViewColumn Header="Completed" Width="auto">
-                        <GridViewColumn.CellTemplate>
-                            <DataTemplate>
-                                <CheckBox 
+                                <CheckBox
                                     Command="{Binding DataContext.ChangeCaseStatusCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type local:MainWindow}}}"
                                     CommandParameter="{Binding}"
                                     IsChecked="{Binding IsDone}" />

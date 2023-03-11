@@ -1,4 +1,5 @@
-﻿using EC05_C_sharp_Case_mgmt_wpf.MVVM.ViewModels;
+﻿using CommunityToolkit.Mvvm.Input;
+using EC05_C_sharp_Case_mgmt_wpf.MVVM.ViewModels;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
@@ -34,5 +35,16 @@ namespace EC05_C_sharp_Case_mgmt_wpf.MVVM.Views
             this.Visibility = Visibility.Hidden;
             e.Cancel = true;
         }
+
+        //[RelayCommand]
+        //private void UnlockDetailsView()
+        //{
+        //    tb_firstname.IsEnabled = true;
+        //    tb_lastname.IsEnabled = true;
+        //    tb_email.IsEnabled = true;
+        //    tb_phonenumber.IsEnabled = true;
+        //    tb_description.IsEnabled = true;
+        //    tb_status.IsEnabled = true;
+        //}
     }
 }
