@@ -18,6 +18,5 @@ namespace EC05_C_sharp_Case_mgmt_wpf.MVVM.Models
         public string Description { get; set; } = string.Empty;
         public DateTime Created { get; set; } = DateTime.UtcNow;
         public bool IsDone { get; set; }
-
     }
 }

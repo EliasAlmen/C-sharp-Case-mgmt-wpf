@@ -4,6 +4,7 @@ using EC05_C_sharp_Case_mgmt_wpf.Contexts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace EC05_C_sharp_Case_mgmt_wpf.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20230311080430_CaseCommentsRevThree")]
+    partial class CaseCommentsRevThree
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -24,11 +27,11 @@ namespace EC05_C_sharp_Case_mgmt_wpf.Migrations
 
             modelBuilder.Entity("EC05_C_sharp_Case_mgmt_wpf.MVVM.Models.Entities.CommentEntity", b =>
                 {
-                    b.Property<int>("CommentEntityId")
+                    b.Property<int>("CaseCommentsId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("CommentEntityId"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("CaseCommentsId"));
 
                     b.Property<string>("CommentAuthor")
                         .IsRequired()
@@ -43,12 +46,12 @@ namespace EC05_C_sharp_Case_mgmt_wpf.Migrations
                         .HasMaxLength(200)
                         .HasColumnType("nvarchar(200)");
 
-                    b.Property<int>("CustomerEntityId")
+                    b.Property<int>("CustomersId")
                         .HasColumnType("int");
 
-                    b.HasKey("CommentEntityId");
+                    b.HasKey("CaseCommentsId");
 
-                    b.HasIndex("CustomerEntityId");
+                    b.HasIndex("CustomersId");
 
                     b.ToTable("Comments");
                 });
@@ -60,6 +63,9 @@ namespace EC05_C_sharp_Case_mgmt_wpf.Migrations
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("CaseCommentsId")
+                        .HasColumnType("int");
 
                     b.Property<DateTime>("Created")
                         .HasColumnType("datetime2");
@@ -98,18 +104,18 @@ namespace EC05_C_sharp_Case_mgmt_wpf.Migrations
 
             modelBuilder.Entity("EC05_C_sharp_Case_mgmt_wpf.MVVM.Models.Entities.CommentEntity", b =>
                 {
-                    b.HasOne("EC05_C_sharp_Case_mgmt_wpf.MVVM.Models.Entities.CustomerEntity", "CustomerEntity")
-                        .WithMany("CommentEntity")
-                        .HasForeignKey("CustomerEntityId")
+                    b.HasOne("EC05_C_sharp_Case_mgmt_wpf.MVVM.Models.Entities.CustomerEntity", "Customers")
+                        .WithMany("CaseComments")
+                        .HasForeignKey("CustomersId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("CustomerEntity");
+                    b.Navigation("Customers");
                 });
 
             modelBuilder.Entity("EC05_C_sharp_Case_mgmt_wpf.MVVM.Models.Entities.CustomerEntity", b =>
                 {
-                    b.Navigation("CommentEntity");
+                    b.Navigation("CaseComments");
                 });
 #pragma warning restore 612, 618
         }

@@ -8,13 +8,17 @@
     xmlns:view="clr-namespace:EC05_C_sharp_Case_mgmt_wpf.MVVM.Views"
     xmlns:viewmodels="clr-namespace:EC05_C_sharp_Case_mgmt_wpf.MVVM.ViewModels"
     Title="CaseDetailsWindow"
-    Width="300"
+    Width="600"
     Height="650"
     d:DataContext="{d:DesignInstance Type=viewmodels:CaseDetailsViewModel}"
     WindowStartupLocation="CenterScreen"
     mc:Ignorable="d">
     <Grid Margin="10">
-        <Border BorderBrush="Gray" BorderThickness="1">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+        <Border Margin="5" Grid.Column="0" BorderBrush="Gray" BorderThickness="1">
             <StackPanel>
                 <Label Content="First name:" FontWeight="Medium" />
                 <TextBox
@@ -68,6 +72,9 @@
                     IsEnabled="False"
                     Text="{Binding Created}" />
             </StackPanel>
+        </Border>
+        <Border Margin="5" Grid.Column="1" BorderBrush="Gray" BorderThickness="1">
+            
         </Border>
     </Grid>
 </Window>

@@ -27,7 +27,7 @@ namespace EC05_C_sharp_Case_mgmt_wpf.MVVM.ViewModels
             _DataContext = dataContext;
             LoadOpenCases();
             LoadClosedCases();
-            ValueDone = IsDone ? "Open" : "Closed";
+            //ValueDone = IsDone ? "Open" : "Closed";
         }
         
         //todo: In case closed list add column for datetime -> closed.
@@ -61,12 +61,19 @@ namespace EC05_C_sharp_Case_mgmt_wpf.MVVM.ViewModels
         private string tb_Description_text = "Max 500 characters";
         [ObservableProperty]
         private bool isDone;
-        [ObservableProperty]
-        private string valueDone;
+        //[ObservableProperty]
+        //private string valueDone;
         [ObservableProperty]
         private DateTime created;
 
-        
+        [ObservableProperty]
+        private string commentText = string.Empty;
+        [ObservableProperty]    
+        private string commentAuthor = string.Empty;
+        [ObservableProperty]
+        private DateTime commentCreated;
+
+
 
         #region Add case panel
         [RelayCommand]

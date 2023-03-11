@@ -9,7 +9,7 @@
     xmlns:viewmodels="clr-namespace:EC05_C_sharp_Case_mgmt_wpf.MVVM.ViewModels"
     Title="Case system"
     Width="1600"
-    Height="450"
+    Height="475"
     d:DataContext="{d:DesignInstance Type=viewmodels:MainViewModel}"
     WindowStartupLocation="CenterScreen"
     mc:Ignorable="d">
@@ -19,54 +19,121 @@
     <Grid Margin="10">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="250" />
+            <ColumnDefinition Width="250" />
             <ColumnDefinition Width="*" />
             <ColumnDefinition Width="*" />
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
-        <StackPanel Grid.Column="0" Margin="10">
-            <TextBlock Text="{Binding Tb_firstName}" />
-            <TextBox
-                Margin="0,0,0,5"
-                Padding="5"
-                Text="{Binding FirstName}" />
-            <TextBlock Text="{Binding Tb_lastName}" />
-            <TextBox
-                Margin="0,0,0,5"
-                Padding="5"
-                Text="{Binding LastName}" />
-            <TextBlock Text="{Binding Tb_email}" />
-            <TextBox
-                Margin="0,0,0,5"
-                Padding="5"
-                Text="{Binding Email}" />
-            <TextBlock Text="{Binding Tb_phoneNumber}" />
-            <TextBox
-                Margin="0,0,0,5"
-                Padding="5"
-                Text="{Binding PhoneNumber}" />
-            <TextBlock Text="{Binding Tb_description}" />
-            <TextBox
-                Name="tb_Description"
-                Height="75"
-                Margin="0,0,0,5"
-                Padding="5"
-                AcceptsReturn="True"
-                MaxLength="500"
-                MaxLines="5"
-                MinLines="1"
-                Text="{Binding Description}"
-                TextWrapping="Wrap"
-                VerticalScrollBarVisibility="Visible" />
-            <Button
-                Width="100"
-                Margin="0,20,0,0"
-                Padding="8"
-                Command="{Binding AddCaseCommand}"
-                Content="Add Case" />
-        </StackPanel>
+        <Border
+            Grid.Column="0"
+            Margin="25,0,25,25"
+            BorderBrush="Gray"
+            BorderThickness="1">
+            <StackPanel Grid.Column="0" Margin="10">
+                <TextBlock Text="{Binding Tb_firstName}" />
+                <TextBox
+                    Margin="0,0,0,5"
+                    Padding="5"
+                    Text="{Binding FirstName}" />
+                <TextBlock Text="{Binding Tb_lastName}" />
+                <TextBox
+                    Margin="0,0,0,5"
+                    Padding="5"
+                    Text="{Binding LastName}" />
+                <TextBlock Text="{Binding Tb_email}" />
+                <TextBox
+                    Margin="0,0,0,5"
+                    Padding="5"
+                    Text="{Binding Email}" />
+                <TextBlock Text="{Binding Tb_phoneNumber}" />
+                <TextBox
+                    Margin="0,0,0,5"
+                    Padding="5"
+                    Text="{Binding PhoneNumber}" />
+                <TextBlock Text="{Binding Tb_description}" />
+                <TextBox
+                    Name="tb_Description"
+                    Height="75"
+                    Margin="0,0,0,5"
+                    Padding="5"
+                    AcceptsReturn="True"
+                    MaxLength="500"
+                    MaxLines="5"
+                    MinLines="1"
+                    Text="{Binding Description}"
+                    TextWrapping="Wrap"
+                    VerticalScrollBarVisibility="Visible" />
+                <Button
+                    Width="100"
+                    Margin="0,20,0,0"
+                    Padding="8"
+                    Command="{Binding AddCaseCommand}"
+                    Content="Add Case" />
+            </StackPanel>
+
+        </Border>
+        <Border
+            Grid.Column="1"
+            Margin="25,0,25,25"
+            BorderBrush="Gray"
+            BorderThickness="1">
+            <StackPanel Margin="10">
+                <TextBlock Text="First name" />
+                <TextBox
+                    Margin="0,0,0,5"
+                    IsEnabled="{Binding Lock_firstname}"
+                    Text="{Binding SelectedItem.FirstName, ElementName=contactList}" />
+                <TextBlock Text="Last name" />
+                <TextBox
+                    Margin="0,0,0,5"
+                    IsEnabled="{Binding Lock_lastname}"
+                    Text="{Binding SelectedItem.LastName, ElementName=contactList}" />
+                <TextBlock Text="Email" />
+                <TextBox
+                    Margin="0,0,0,5"
+                    IsEnabled="{Binding Lock_email}"
+                    Text="{Binding SelectedItem.Email, ElementName=contactList}" />
+                <TextBlock Text="Phone number" />
+                <TextBox
+                    Margin="0,0,0,5"
+                    IsEnabled="{Binding Lock_phonenumber}"
+                    Text="{Binding SelectedItem.PhoneNumber, ElementName=contactList}" />
+                <TextBlock Text="Case Description" />
+                <TextBox
+                    Height="50"
+                    Margin="0,0,0,5"
+                    AcceptsReturn="True"
+                    IsEnabled="{Binding Lock_description}"
+                    MaxLength="500"
+                    MaxLines="5"
+                    MinLines="1"
+                    Text="{Binding SelectedItem.Description, ElementName=contactList}"
+                    TextWrapping="Wrap"
+                    VerticalScrollBarVisibility="Visible" />
+                <Button
+                    Margin="5"
+                    Command="{Binding CommentSelectedCommand}"
+                    Content="Add comment" Click="Button_Click" />
+                <Separator />
+                <Button
+                    Margin="5"
+                    Command="{Binding UnlockSelectedCommand}"
+                    Content="{Binding Btn_unlock}" />
+                <Button
+                    Margin="5"
+                    Command="{Binding UpdateSelectedCommand}"
+                    Content="Update case"
+                    IsEnabled="{Binding Btn_enable_update}" />
+                <Button
+                    Margin="5"
+                    Command="{Binding DeleteSelectedCommand}"
+                    Content="Delete case"
+                    IsEnabled="{Binding Btn_enable_delete}" />
+            </StackPanel>
+        </Border>
         <ListView
             x:Name="contactList"
-            Grid.Column="1"
+            Grid.Column="2"
             Margin="0,0,0,25"
             Background="White"
             ItemsSource="{Binding Cases}"
@@ -82,7 +149,7 @@
                     <GridViewColumn
                         Width="auto"
                         DisplayMemberBinding="{Binding Id}"
-                        Header="Case Id" />
+                        Header="Id" />
                     <GridViewColumn
                         Width="auto"
                         DisplayMemberBinding="{Binding Created, StringFormat='yyyy-MM-dd HH:mm'}"
@@ -104,57 +171,38 @@
                 </GridView>
             </ListView.View>
         </ListView>
-        <StackPanel Grid.Column="2" Margin="25,0,25,0">
-            <TextBlock Text="First name" />
-            <TextBox
-                Margin="0,0,0,5"
-                IsEnabled="{Binding Lock_firstname}"
-                Text="{Binding SelectedItem.FirstName, ElementName=contactList}" />
-            <TextBlock Text="Last name" />
-            <TextBox
-                Margin="0,0,0,5"
-                IsEnabled="{Binding Lock_lastname}"
-                Text="{Binding SelectedItem.LastName, ElementName=contactList}" />
-            <TextBlock Text="Email" />
-            <TextBox
-                Margin="0,0,0,5"
-                IsEnabled="{Binding Lock_email}"
-                Text="{Binding SelectedItem.Email, ElementName=contactList}" />
-            <TextBlock Text="Phone number" />
-            <TextBox
-                Margin="0,0,0,5"
-                IsEnabled="{Binding Lock_phonenumber}"
-                Text="{Binding SelectedItem.PhoneNumber, ElementName=contactList}" />
-            <TextBlock Text="Case Description" />
-            <TextBox
-                Height="75"
-                Margin="0,0,0,5"
-                AcceptsReturn="True"
-                IsEnabled="{Binding Lock_description}"
-                MaxLength="500"
-                MaxLines="5"
-                MinLines="1"
-                Text="{Binding SelectedItem.Description, ElementName=contactList}"
-                TextWrapping="Wrap"
-                VerticalScrollBarVisibility="Visible" />
-            <Button
-                Margin="10"
-                Command="{Binding UnlockSelectedCommand}"
-                Content="{Binding Btn_unlock}" />
-            <Button
-                Margin="10"
-                Command="{Binding UpdateSelectedCommand}"
-                Content="Update case"
-                IsEnabled="{Binding Btn_enable_update}" />
-            <Button
-                Margin="10"
-                Command="{Binding DeleteSelectedCommand}"
-                Content="Delete case"
-                IsEnabled="{Binding Btn_enable_delete}" />
-        </StackPanel>
+        <ListView
+            x:Name="commentList"
+            Grid.Column="3"
+            Margin="0,0,0,25"
+            Background="White"
+            ItemsSource="{Binding contactList.SelectedCaseItem}"
+            SelectionMode="Single">
+            >
+            <ListView.View>
+                <GridView>
+                    <GridViewColumn
+                        Width="auto"
+                        DisplayMemberBinding="{Binding CommentId}"
+                        Header="Id" />
+                    <GridViewColumn
+                        Width="auto"
+                        DisplayMemberBinding="{Binding CommentAuthor}"
+                        Header="Author" />
+                    <GridViewColumn
+                        Width="auto"
+                        DisplayMemberBinding="{Binding CommentCreated, StringFormat='yyyy-MM-dd HH:mm'}"
+                        Header="Created" />
+                    <GridViewColumn
+                        Width="auto"
+                        DisplayMemberBinding="{Binding CommentText}"
+                        Header="Comment" />
+                </GridView>
+            </ListView.View>
+        </ListView>
         <ListView
             x:Name="contactListClosed"
-            Grid.Column="3"
+            Grid.Column="4"
             Margin="0,0,0,25"
             Background="White"
             ItemsSource="{Binding CaseClose}"

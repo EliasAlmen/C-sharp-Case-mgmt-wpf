@@ -22,5 +22,7 @@ namespace EC05_C_sharp_Case_mgmt_wpf.MVVM.Models.Entities
         public string Description { get; set; } = string.Empty;
         public DateTime Created { get; set; } = DateTime.Now;
         public bool IsDone { get; set; }
+
+        public ICollection<CommentEntity>? CommentEntity { get; set; }
     }
 }

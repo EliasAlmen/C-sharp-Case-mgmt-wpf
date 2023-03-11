@@ -58,5 +58,9 @@ namespace EC05_C_sharp_Case_mgmt_wpf
             //result = MessageBox.Show(messageBoxText, caption, button, icon);
         }
 
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
     }
 }
