@@ -4,6 +4,7 @@ using EC05_C_sharp_Case_mgmt_wpf.Contexts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace EC05_C_sharp_Case_mgmt_wpf.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20230313131107_commentEntityIdagain")]
+    partial class commentEntityIdagain
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -22,7 +25,38 @@ namespace EC05_C_sharp_Case_mgmt_wpf.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("EC05_C_sharp_Case_mgmt_wpf.MVVM.Models.Entities.CaseEntity", b =>
+            modelBuilder.Entity("EC05_C_sharp_Case_mgmt_wpf.MVVM.Models.Entities.CommentEntity", b =>
+                {
+                    b.Property<int>("CommentEntityId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("CommentEntityId"));
+
+                    b.Property<string>("CommentAuthor")
+                        .IsRequired()
+                        .HasMaxLength(75)
+                        .HasColumnType("nvarchar(75)");
+
+                    b.Property<DateTime>("CommentCreated")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("CommentText")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.Property<int>("CustomerEntityId")
+                        .HasColumnType("int");
+
+                    b.HasKey("CommentEntityId");
+
+                    b.HasIndex("CustomerEntityId");
+
+                    b.ToTable("Comments");
+                });
+
+            modelBuilder.Entity("EC05_C_sharp_Case_mgmt_wpf.MVVM.Models.Entities.CustomerEntity", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -65,51 +99,21 @@ namespace EC05_C_sharp_Case_mgmt_wpf.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("CasesSql");
+                    b.ToTable("Customers");
                 });
 
             modelBuilder.Entity("EC05_C_sharp_Case_mgmt_wpf.MVVM.Models.Entities.CommentEntity", b =>
                 {
-                    b.Property<int>("CommentId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("CommentId"));
-
-                    b.Property<int>("CaseEntityId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("CommentAuthor")
-                        .IsRequired()
-                        .HasMaxLength(75)
-                        .HasColumnType("nvarchar(75)");
-
-                    b.Property<DateTime>("CommentCreated")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("CommentText")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("CommentId");
-
-                    b.HasIndex("CaseEntityId");
-
-                    b.ToTable("Comments");
-                });
-
-            modelBuilder.Entity("EC05_C_sharp_Case_mgmt_wpf.MVVM.Models.Entities.CommentEntity", b =>
-                {
-                    b.HasOne("EC05_C_sharp_Case_mgmt_wpf.MVVM.Models.Entities.CaseEntity", "CaseEntity")
+                    b.HasOne("EC05_C_sharp_Case_mgmt_wpf.MVVM.Models.Entities.CustomerEntity", "CustomerEntity")
                         .WithMany("CommentEntity")
-                        .HasForeignKey("CaseEntityId")
+                        .HasForeignKey("CustomerEntityId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("CaseEntity");
+                    b.Navigation("CustomerEntity");
                 });
 
-            modelBuilder.Entity("EC05_C_sharp_Case_mgmt_wpf.MVVM.Models.Entities.CaseEntity", b =>
+            modelBuilder.Entity("EC05_C_sharp_Case_mgmt_wpf.MVVM.Models.Entities.CustomerEntity", b =>
                 {
                     b.Navigation("CommentEntity");
                 });

@@ -16,7 +16,7 @@ namespace EC05_C_sharp_Case_mgmt_wpf.Services
 
         public static async Task SaveAsync(CaseModel caseModel)
         {
-            var _customerEntity = new CustomerEntity
+            var _customerEntity = new CaseEntity
             {
                 FirstName = caseModel.FirstName,
                 LastName = caseModel.LastName,

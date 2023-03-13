@@ -26,9 +26,7 @@ namespace EC05_C_sharp_Case_mgmt_wpf.MVVM.ViewModels
         {
             _DataContext = dataContext;
             LoadOpenCases();
-            //NewLoadOpenCases();
             LoadClosedCases();
-            //ValueDone = IsDone ? "Open" : "Closed";
         }
 
         //todo: In case closed list add column for datetime -> closed.
@@ -115,14 +113,14 @@ namespace EC05_C_sharp_Case_mgmt_wpf.MVVM.ViewModels
         /// Observable property with INotifyChanged created by source generators
         /// </summary>
         [ObservableProperty]
-        public ObservableCollection<CustomerEntity> cases = new();
+        public ObservableCollection<CaseEntity> cases = new();
         /// <summary>
         /// Loads existing Cases from the DataContext
         /// </summary>
         private void LoadOpenCases()
         {
             Cases.Clear();
-            var _cases = _DataContext!.Customers.Where(o => !o.IsDone).Include(x => x.CommentEntity).ToList();
+            var _cases = _DataContext!.CasesSql.Where(o => !o.IsDone).Include(x => x.CommentEntity).ToList();
             _cases.ForEach(o =>
             {
                 Cases.Add(o);
@@ -132,11 +130,11 @@ namespace EC05_C_sharp_Case_mgmt_wpf.MVVM.ViewModels
         /// Observable property with INotifyChanged created by source generators
         /// </summary>
         [ObservableProperty]
-        public ObservableCollection<CustomerEntity> caseClose = new();
+        public ObservableCollection<CaseEntity> caseClose = new();
         private void LoadClosedCases()
         {
             CaseClose.Clear();
-            var _cases = _DataContext!.Customers.Where(o => o.IsDone).ToList();
+            var _cases = _DataContext!.CasesSql.Where(o => o.IsDone).ToList();
             _cases.ForEach(o =>
             {
                 CaseClose.Add(o);
@@ -150,7 +148,7 @@ namespace EC05_C_sharp_Case_mgmt_wpf.MVVM.ViewModels
         /// </summary>
         /// <param name="customer"></param>
         [RelayCommand]
-        private void ChangeCaseStatus(CustomerEntity customer)
+        private void ChangeCaseStatus(CaseEntity customer)
         {
             string messageBoxText = "Case completed?\n\n";
             string caption = $"Edit";
@@ -179,9 +177,9 @@ namespace EC05_C_sharp_Case_mgmt_wpf.MVVM.ViewModels
 
         #region Delete & update selected case
         [ObservableProperty]
-        private CustomerEntity selectedCaseItem;
+        private CaseEntity selectedCaseItem;
         [RelayCommand]
-        private void DeleteSelected(CustomerEntity customer)
+        private void DeleteSelected(CaseEntity customer)
         {
             
             customer = SelectedCaseItem;
@@ -200,7 +198,7 @@ namespace EC05_C_sharp_Case_mgmt_wpf.MVVM.ViewModels
             switch (result)
             {
                 case MessageBoxResult.Yes:
-                    _DataContext.Customers.Remove(customer);
+                    _DataContext.CasesSql.Remove(customer);
                     _DataContext.SaveChanges();
                     LoadOpenCases();
                     LoadClosedCases();
@@ -211,7 +209,7 @@ namespace EC05_C_sharp_Case_mgmt_wpf.MVVM.ViewModels
             }
         }
         [RelayCommand]
-        private void UpdateSelected(CustomerEntity customer)
+        private void UpdateSelected(CaseEntity customer)
         {
             string messageBoxText = "Update case?\n\n";
             string caption = $"Edit";
@@ -224,7 +222,7 @@ namespace EC05_C_sharp_Case_mgmt_wpf.MVVM.ViewModels
             {
                 case MessageBoxResult.Yes:
                     customer = SelectedCaseItem;
-                    _DataContext.Customers.Update(customer);
+                    _DataContext.CasesSql.Update(customer);
                     _DataContext.SaveChanges();
                     LoadOpenCases();
                     LoadClosedCases();
@@ -318,7 +316,7 @@ namespace EC05_C_sharp_Case_mgmt_wpf.MVVM.ViewModels
         {
             CommentEntity commentEntity = new()
             {
-                CustomerEntityId = SelectedCaseItem.Id,
+                CaseEntityId = SelectedCaseItem.Id,
                 CommentText = CommentTextInput,
                 CommentAuthor = CommentAuthorInput,
             };

@@ -42,7 +42,7 @@ namespace EC05_C_sharp_Case_mgmt_wpf
         private void ListViewItem_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
             var item = (ListViewItem)sender;
-            var caseItem = (CustomerEntity)item.DataContext;
+            var caseItem = (CaseEntity)item.DataContext;
 
             _caseDetailsWindow.DataContext = caseItem;
             _caseDetailsWindow.Show();
