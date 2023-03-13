@@ -8,7 +8,7 @@
     xmlns:view="clr-namespace:EC05_C_sharp_Case_mgmt_wpf.MVVM.Views"
     xmlns:viewmodels="clr-namespace:EC05_C_sharp_Case_mgmt_wpf.MVVM.ViewModels"
     Title="CaseDetailsWindow"
-    Width="600"
+    Width="800"
     Height="650"
     d:DataContext="{d:DesignInstance Type=viewmodels:CaseDetailsViewModel}"
     WindowStartupLocation="CenterScreen"
@@ -18,7 +18,11 @@
             <ColumnDefinition Width="*" />
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
-        <Border Margin="5" Grid.Column="0" BorderBrush="Gray" BorderThickness="1">
+        <Border
+            Grid.Column="0"
+            Margin="5"
+            BorderBrush="Gray"
+            BorderThickness="1">
             <StackPanel>
                 <Label Content="First name:" FontWeight="Medium" />
                 <TextBox
@@ -73,8 +77,37 @@
                     Text="{Binding Created}" />
             </StackPanel>
         </Border>
-        <Border Margin="5" Grid.Column="1" BorderBrush="Gray" BorderThickness="1">
-            
-        </Border>
+        <ListView
+            Grid.Column="1"
+            Margin="5"
+            Background="White"
+            ItemsSource="{Binding CommentEntity}"
+            SelectionMode="Single">
+            <ListView.View>
+                <GridView>
+                    <GridViewColumn
+                        Width="auto"
+                        DisplayMemberBinding="{Binding CommentCreated, StringFormat='yyyy-MM-dd HH:mm'}"
+                        Header="Created" />
+                    <GridViewColumn
+                        Width="auto"
+                        DisplayMemberBinding="{Binding CommentAuthor}"
+                        Header="Author" />
+                    <GridViewColumn Header="Comment">
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <TextBlock
+                                    Width="175"
+                                    Height="auto"
+                                    Padding="2"
+                                    IsEnabled="False"
+                                    Text="{Binding CommentText}"
+                                    TextWrapping="Wrap" />
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+                </GridView>
+            </ListView.View>
+        </ListView>
     </Grid>
 </Window>

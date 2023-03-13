@@ -7,6 +7,7 @@
     xmlns:local="clr-namespace:EC05_C_sharp_Case_mgmt_wpf"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:viewmodels="clr-namespace:EC05_C_sharp_Case_mgmt_wpf.MVVM.ViewModels"
+    xmlns:views="clr-namespace:EC05_C_sharp_Case_mgmt_wpf.MVVM.Views"
     Title="Case system"
     Width="1600"
     Height="475"
@@ -112,8 +113,8 @@
                     VerticalScrollBarVisibility="Visible" />
                 <Button
                     Margin="5"
-                    Command="{Binding CommentSelectedCommand}"
-                    Content="Add comment" Click="Button_Click" />
+                    Click="Button_Click"
+                    Content="Add comment" />
                 <Separator />
                 <Button
                     Margin="5"
@@ -139,6 +140,12 @@
             ItemsSource="{Binding Cases}"
             SelectedItem="{Binding SelectedCaseItem}"
             SelectionMode="Single">
+            <!--<ListView.SelectedItem>
+                <MultiBinding Converter="">
+                    <Binding Path="{Binding SelectedCaseItem}"/>
+                    <Binding Path="{Binding TestCommentModel}"/>
+                </MultiBinding>
+            </ListView.SelectedItem>-->
             <ListView.Resources>
                 <Style TargetType="ListViewItem">
                     <EventSetter Event="MouseDoubleClick" Handler="ListViewItem_MouseDoubleClick" />
@@ -176,27 +183,32 @@
             Grid.Column="3"
             Margin="0,0,0,25"
             Background="White"
-            ItemsSource="{Binding contactList.SelectedCaseItem}"
+            ItemsSource="{Binding SelectedCaseItem.CommentEntity}"
             SelectionMode="Single">
-            >
             <ListView.View>
                 <GridView>
-                    <GridViewColumn
-                        Width="auto"
-                        DisplayMemberBinding="{Binding CommentId}"
-                        Header="Id" />
-                    <GridViewColumn
-                        Width="auto"
-                        DisplayMemberBinding="{Binding CommentAuthor}"
-                        Header="Author" />
                     <GridViewColumn
                         Width="auto"
                         DisplayMemberBinding="{Binding CommentCreated, StringFormat='yyyy-MM-dd HH:mm'}"
                         Header="Created" />
                     <GridViewColumn
                         Width="auto"
-                        DisplayMemberBinding="{Binding CommentText}"
-                        Header="Comment" />
+                        DisplayMemberBinding="{Binding CommentAuthor}"
+                        Header="Author" />
+                    <GridViewColumn
+                        Header="Comment">
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <TextBlock
+                                    Height="auto"
+                                    Width="175"
+                                    Padding="2"
+                                    IsEnabled="False"
+                                    Text="{Binding CommentText}"
+                                    TextWrapping="Wrap" />
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
                 </GridView>
             </ListView.View>
         </ListView>

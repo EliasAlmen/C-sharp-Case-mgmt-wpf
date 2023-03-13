@@ -27,26 +27,24 @@ namespace EC05_C_sharp_Case_mgmt_wpf.MVVM.ViewModels
             //LoadOpenCases();
         }
 
-        [ObservableProperty]
-        private string firstName = string.Empty;
+        //[ObservableProperty]
+        //private string firstName = string.Empty;
 
-        [ObservableProperty]
-        private string lastName = string.Empty;
+        //[ObservableProperty]
+        //private string lastName = string.Empty;
 
-        [ObservableProperty]
-        private string email = string.Empty;
+        //[ObservableProperty]
+        //private string email = string.Empty;
 
-        [ObservableProperty]
-        private string phoneNumber = string.Empty;
+        //[ObservableProperty]
+        //private string phoneNumber = string.Empty;
 
-        [ObservableProperty]
-        private string description = string.Empty;
-        [ObservableProperty]
-        private string tb_Description_text = "Max 500 characters";
-        [ObservableProperty]
-        private bool isDone;
-        [ObservableProperty]
-        private DateTime created;
+        //[ObservableProperty]
+        //private string description = string.Empty;
+        //[ObservableProperty]
+        //private bool isDone;
+        //[ObservableProperty]
+        //private DateTime created;
 
         //[ObservableProperty]
         //public ObservableCollection<CustomerEntity> caseDetails = new();

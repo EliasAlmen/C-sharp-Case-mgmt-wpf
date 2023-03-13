@@ -26,13 +26,15 @@ namespace EC05_C_sharp_Case_mgmt_wpf.MVVM.ViewModels
         {
             _DataContext = dataContext;
             LoadOpenCases();
+            //NewLoadOpenCases();
             LoadClosedCases();
             //ValueDone = IsDone ? "Open" : "Closed";
         }
-        
+
         //todo: In case closed list add column for datetime -> closed.
         //todo: In case open list add column for pickuped / datetime pickuped
 
+        #region Add case
         [ObservableProperty]
         private string firstName = string.Empty;
         [ObservableProperty]
@@ -61,21 +63,9 @@ namespace EC05_C_sharp_Case_mgmt_wpf.MVVM.ViewModels
         private string tb_Description_text = "Max 500 characters";
         [ObservableProperty]
         private bool isDone;
-        //[ObservableProperty]
-        //private string valueDone;
         [ObservableProperty]
         private DateTime created;
 
-        [ObservableProperty]
-        private string commentText = string.Empty;
-        [ObservableProperty]    
-        private string commentAuthor = string.Empty;
-        [ObservableProperty]
-        private DateTime commentCreated;
-
-
-
-        #region Add case panel
         [RelayCommand]
         private async void AddCase()
         {
@@ -127,18 +117,17 @@ namespace EC05_C_sharp_Case_mgmt_wpf.MVVM.ViewModels
         [ObservableProperty]
         public ObservableCollection<CustomerEntity> cases = new();
         /// <summary>
-        /// Loads existing ToDos from the DataContext
+        /// Loads existing Cases from the DataContext
         /// </summary>
         private void LoadOpenCases()
         {
             Cases.Clear();
-            var _cases = _DataContext!.Customers.Where(o => !o.IsDone).ToList();
+            var _cases = _DataContext!.Customers.Where(o => !o.IsDone).Include(x => x.CommentEntity).ToList();
             _cases.ForEach(o =>
             {
                 Cases.Add(o);
             });
         }
-
         /// <summary>
         /// Observable property with INotifyChanged created by source generators
         /// </summary>
@@ -174,30 +163,27 @@ namespace EC05_C_sharp_Case_mgmt_wpf.MVVM.ViewModels
             {
                 case MessageBoxResult.Yes:
                         customer.IsDone = true;
-                        //_DataContext.Customers.Update(customer);
                         _DataContext.SaveChanges();
                         LoadOpenCases();
                         LoadClosedCases();
                     break;
                 case MessageBoxResult.No:
                         customer.IsDone = false;
-                        //_DataContext.Customers.Update(customer);
                         _DataContext.SaveChanges();
                         LoadOpenCases();
                         LoadClosedCases();
                     break;
             }
-            
-            
         }
         #endregion
 
-        #region DELETE & UPDATE
+        #region Delete & update selected case
         [ObservableProperty]
         private CustomerEntity selectedCaseItem;
         [RelayCommand]
         private void DeleteSelected(CustomerEntity customer)
         {
+            
             customer = SelectedCaseItem;
             string messageBoxText =
                 "Delete case?\n\n" +
@@ -249,7 +235,7 @@ namespace EC05_C_sharp_Case_mgmt_wpf.MVVM.ViewModels
         }
         #endregion
 
-        #region LOCK & UNLOCK
+        #region Lock & Unlock
         [ObservableProperty]
         private bool lock_firstname;
         [ObservableProperty]
@@ -309,6 +295,39 @@ namespace EC05_C_sharp_Case_mgmt_wpf.MVVM.ViewModels
             
 
             
+        }
+        #endregion
+
+        #region Save comment
+        [ObservableProperty]
+        private string commentTextInput = string.Empty;
+        [ObservableProperty]
+        private string commentAuthorInput = string.Empty;
+        [ObservableProperty]
+        private DateTime commentCreated;
+
+        [ObservableProperty]
+        private string commentText;
+        [ObservableProperty]
+        private string commentAuthor;
+        [ObservableProperty]
+        private int commentEntityId;
+
+        [RelayCommand]
+        private void CommentSave()
+        {
+            CommentEntity commentEntity = new()
+            {
+                CustomerEntityId = SelectedCaseItem.Id,
+                CommentText = CommentTextInput,
+                CommentAuthor = CommentAuthorInput,
+            };
+            _DataContext.Comments.Update(commentEntity);
+
+            _DataContext!.SaveChanges();
+            CommentTextInput = string.Empty;
+            CommentAuthorInput = string.Empty;
+            LoadOpenCases();
         }
         #endregion
     }

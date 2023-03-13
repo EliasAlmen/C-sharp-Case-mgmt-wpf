@@ -28,13 +28,15 @@ namespace EC05_C_sharp_Case_mgmt_wpf
     public partial class MainWindow : Window
     {
         private readonly CaseDetailsWindow _caseDetailsWindow;
+        private readonly AddCaseCommentWindow _addCaseCommentWindow;
 
-        public MainWindow(CaseDetailsWindow caseDetailsWindow)
+        public MainWindow(CaseDetailsWindow caseDetailsWindow, AddCaseCommentWindow addCaseComment)
         {
             InitializeComponent();
             // Get the MainViewModel
             this.DataContext = App.Current.Services.GetService<MainViewModel>();
             _caseDetailsWindow = caseDetailsWindow;
+            _addCaseCommentWindow = addCaseComment;
         }
 
         private void ListViewItem_MouseDoubleClick(object sender, MouseButtonEventArgs e)
@@ -60,7 +62,17 @@ namespace EC05_C_sharp_Case_mgmt_wpf
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
+            //todo: Fix this..
+            var item = (Button)sender;
+            var caseItem = (MainViewModel)item.DataContext;
+            _addCaseCommentWindow.DataContext = caseItem;
+            _addCaseCommentWindow.Show();
 
+            //var item = (ListViewItem)sender;
+            //var caseItem = (CustomerEntity)item.DataContext;
+
+            //_caseDetailsWindow.DataContext = caseItem;
+            //_caseDetailsWindow.Show();
         }
     }
 }
