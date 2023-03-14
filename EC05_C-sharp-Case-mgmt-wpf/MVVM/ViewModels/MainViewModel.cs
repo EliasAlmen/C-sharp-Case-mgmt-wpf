@@ -1,7 +1,6 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using EC05_C_sharp_Case_mgmt_wpf.Contexts;
-using EC05_C_sharp_Case_mgmt_wpf.Migrations;
 using EC05_C_sharp_Case_mgmt_wpf.MVVM.Models;
 using EC05_C_sharp_Case_mgmt_wpf.MVVM.Models.Entities;
 using EC05_C_sharp_Case_mgmt_wpf.MVVM.Views;
@@ -62,7 +61,7 @@ namespace EC05_C_sharp_Case_mgmt_wpf.MVVM.ViewModels
         [ObservableProperty]
         private bool isDone;
         [ObservableProperty]
-        private DateTime created;
+        private DateTime created = DateTime.Now;
 
         [RelayCommand]
         private async void AddCase()
@@ -87,6 +86,8 @@ namespace EC05_C_sharp_Case_mgmt_wpf.MVVM.ViewModels
                 caseModel.PhoneNumber = PhoneNumber;
                 caseModel.Description = Description;
                 caseModel.IsDone = IsDone;
+                caseModel.Created = Created;
+                caseModel.Status = Status;
 
                 //save customer to database
                 await CaseService.SaveAsync(caseModel);
@@ -109,6 +110,10 @@ namespace EC05_C_sharp_Case_mgmt_wpf.MVVM.ViewModels
         #endregion
 
         #region Load cases
+
+        [ObservableProperty]
+        private string status = "Open";
+
         /// <summary>
         /// Observable property with INotifyChanged created by source generators
         /// </summary>
@@ -120,7 +125,11 @@ namespace EC05_C_sharp_Case_mgmt_wpf.MVVM.ViewModels
         private void LoadOpenCases()
         {
             Cases.Clear();
-            var _cases = _DataContext!.CasesSql.Where(o => !o.IsDone).Include(x => x.CommentEntity).ToList();
+            var _cases = _DataContext!.CasesSql.Where(o => !o.IsDone)
+                .Include(x => x.CommentEntity)
+                .Include(x => x.OwnerEntity)
+                .Include(x => x.CaseStatusEntity)
+                .ToList();
             _cases.ForEach(o =>
             {
                 Cases.Add(o);
@@ -177,20 +186,34 @@ namespace EC05_C_sharp_Case_mgmt_wpf.MVVM.ViewModels
 
         #region Delete & update selected case
         [ObservableProperty]
-        private CaseEntity selectedCaseItem;
+        private CaseEntity selectedCaseItem = null!;
         [RelayCommand]
-        private void DeleteSelected(CaseEntity customer)
+        private void DeleteSelected(CaseEntity caseEntity)
         {
-            
-            customer = SelectedCaseItem;
+            OwnerEntity ownerEntity = new()
+            {
+                OwnerId = SelectedCaseItem.CaseId
+
+            };
+            caseEntity = SelectedCaseItem;
+
+            //CaseEntity caseEntity = new()
+            //{
+            //    OwnerEntityId = SelectedCaseItem.OwnerEntityId
+            //};
+            ////CaseStatusEntity caseStatusEntity = new()
+            ////{
+            ////    CaseEntityId = caseEntity.CaseId
+            ////};
+
             string messageBoxText =
                 "Delete case?\n\n" +
-                $"{customer.FirstName}" + " " + $"{customer.LastName}\n" +
-                $"{customer.Email}\n" +
-                $"{customer.PhoneNumber}\n\n" +
-                $"Case description:\n{customer.Description}\n\n" +
-                $"Case status: {customer.IsDone}";
-            string caption = $"Case Id {customer.Id}";
+                $"{ownerEntity.FirstName}" + " " + $"{ownerEntity.LastName}\n" +
+                $"{ownerEntity.Email}\n" +
+                $"{ownerEntity.PhoneNumber}\n\n" +
+                $"Case description:\n{SelectedCaseItem.Description}\n\n" +
+                $"Case status: {SelectedCaseItem.IsDone}";
+            string caption = $"Case Id {SelectedCaseItem.CaseId}";
             MessageBoxButton button = MessageBoxButton.YesNo;
             MessageBoxImage icon = MessageBoxImage.Warning;
             MessageBoxResult result;
@@ -198,7 +221,9 @@ namespace EC05_C_sharp_Case_mgmt_wpf.MVVM.ViewModels
             switch (result)
             {
                 case MessageBoxResult.Yes:
-                    _DataContext.CasesSql.Remove(customer);
+                    //_DataContext.OwnerSql.Remove(ownerEntity);
+                    _DataContext.CasesSql.Remove(caseEntity);
+                    //_DataContext.CaseStatusSql.Remove(caseStatusEntity);
                     _DataContext.SaveChanges();
                     LoadOpenCases();
                     LoadClosedCases();
@@ -209,7 +234,7 @@ namespace EC05_C_sharp_Case_mgmt_wpf.MVVM.ViewModels
             }
         }
         [RelayCommand]
-        private void UpdateSelected(CaseEntity customer)
+        private void UpdateSelected(CaseEntity caseEntity)
         {
             string messageBoxText = "Update case?\n\n";
             string caption = $"Edit";
@@ -221,11 +246,12 @@ namespace EC05_C_sharp_Case_mgmt_wpf.MVVM.ViewModels
             switch (result)
             {
                 case MessageBoxResult.Yes:
-                    customer = SelectedCaseItem;
-                    _DataContext.CasesSql.Update(customer);
+                    caseEntity = SelectedCaseItem;
+                    _DataContext.CasesSql.Update(caseEntity);
                     _DataContext.SaveChanges();
                     LoadOpenCases();
                     LoadClosedCases();
+                    UnlockSelected();
                     break;
                 case MessageBoxResult.No:
                     break;
@@ -305,9 +331,9 @@ namespace EC05_C_sharp_Case_mgmt_wpf.MVVM.ViewModels
         private DateTime commentCreated;
 
         [ObservableProperty]
-        private string commentText;
+        private string commentText = string.Empty;
         [ObservableProperty]
-        private string commentAuthor;
+        private string commentAuthor = string.Empty;
         [ObservableProperty]
         private int commentEntityId;
 
@@ -316,11 +342,11 @@ namespace EC05_C_sharp_Case_mgmt_wpf.MVVM.ViewModels
         {
             CommentEntity commentEntity = new()
             {
-                CaseEntityId = SelectedCaseItem.Id,
+                CaseEntityId = SelectedCaseItem.CaseId,
                 CommentText = CommentTextInput,
                 CommentAuthor = CommentAuthorInput,
             };
-            _DataContext.Comments.Update(commentEntity);
+            _DataContext.CommentsSql.Update(commentEntity);
 
             _DataContext!.SaveChanges();
             CommentTextInput = string.Empty;

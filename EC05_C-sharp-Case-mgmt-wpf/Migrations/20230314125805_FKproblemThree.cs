@@ -5,22 +5,22 @@
 namespace EC05_C_sharp_Case_mgmt_wpf.Migrations
 {
     /// <inheritdoc />
-    public partial class CommentEntityIdRemove : Migration
+    public partial class FKproblemThree : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropColumn(
-                name: "CommentEntityId",
-                table: "Customers");
+                name: "CaseEntityId",
+                table: "OwnerSql");
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.AddColumn<int>(
-                name: "CommentEntityId",
-                table: "Customers",
+                name: "CaseEntityId",
+                table: "OwnerSql",
                 type: "int",
                 nullable: false,
                 defaultValue: 0);

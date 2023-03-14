@@ -25,6 +25,7 @@
             <ColumnDefinition Width="*" />
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
+        <!--Add case panel-->
         <Border
             Grid.Column="0"
             Margin="25,0,25,25"
@@ -73,6 +74,7 @@
             </StackPanel>
 
         </Border>
+        <!--Admin panel-->
         <Border
             Grid.Column="1"
             Margin="25,0,25,25"
@@ -83,22 +85,22 @@
                 <TextBox
                     Margin="0,0,0,5"
                     IsEnabled="{Binding Lock_firstname}"
-                    Text="{Binding SelectedItem.FirstName, ElementName=contactList}" />
+                    Text="{Binding SelectedItem.OwnerEntity.FirstName, ElementName=contactList}" />
                 <TextBlock Text="Last name" />
                 <TextBox
                     Margin="0,0,0,5"
                     IsEnabled="{Binding Lock_lastname}"
-                    Text="{Binding SelectedItem.LastName, ElementName=contactList}" />
+                    Text="{Binding SelectedItem.OwnerEntity.LastName, ElementName=contactList}" />
                 <TextBlock Text="Email" />
                 <TextBox
                     Margin="0,0,0,5"
                     IsEnabled="{Binding Lock_email}"
-                    Text="{Binding SelectedItem.Email, ElementName=contactList}" />
+                    Text="{Binding SelectedItem.OwnerEntity.Email, ElementName=contactList}" />
                 <TextBlock Text="Phone number" />
                 <TextBox
                     Margin="0,0,0,5"
                     IsEnabled="{Binding Lock_phonenumber}"
-                    Text="{Binding SelectedItem.PhoneNumber, ElementName=contactList}" />
+                    Text="{Binding SelectedItem.OwnerEntity.PhoneNumber, ElementName=contactList}" />
                 <TextBlock Text="Case Description" />
                 <TextBox
                     Height="50"
@@ -132,6 +134,7 @@
                     IsEnabled="{Binding Btn_enable_delete}" />
             </StackPanel>
         </Border>
+        <!--Case open list-->
         <ListView
             x:Name="contactList"
             Grid.Column="2"
@@ -140,12 +143,6 @@
             ItemsSource="{Binding Cases}"
             SelectedItem="{Binding SelectedCaseItem}"
             SelectionMode="Single">
-            <!--<ListView.SelectedItem>
-                <MultiBinding Converter="">
-                    <Binding Path="{Binding SelectedCaseItem}"/>
-                    <Binding Path="{Binding TestCommentModel}"/>
-                </MultiBinding>
-            </ListView.SelectedItem>-->
             <ListView.Resources>
                 <Style TargetType="ListViewItem">
                     <EventSetter Event="MouseDoubleClick" Handler="ListViewItem_MouseDoubleClick" />
@@ -155,7 +152,7 @@
                 <GridView>
                     <GridViewColumn
                         Width="auto"
-                        DisplayMemberBinding="{Binding Id}"
+                        DisplayMemberBinding="{Binding CaseId}"
                         Header="Id" />
                     <GridViewColumn
                         Width="auto"
@@ -163,8 +160,12 @@
                         Header="Created" />
                     <GridViewColumn
                         Width="auto"
-                        DisplayMemberBinding="{Binding IsDone, Converter={StaticResource BooleanHelper}}"
+                        DisplayMemberBinding="{Binding CaseStatusEntity.Status}"
                         Header="Status" />
+                    <!--<GridViewColumn
+                        Width="auto"
+                        DisplayMemberBinding="{Binding IsDone, Converter={StaticResource BooleanHelper}}"
+                        Header="Status" />-->
                     <GridViewColumn Width="auto" Header="Completed">
                         <GridViewColumn.CellTemplate>
                             <DataTemplate>
@@ -178,6 +179,7 @@
                 </GridView>
             </ListView.View>
         </ListView>
+        <!--Comment list-->
         <ListView
             x:Name="commentList"
             Grid.Column="3"
@@ -212,6 +214,7 @@
                 </GridView>
             </ListView.View>
         </ListView>
+        <!--Case closed list-->
         <ListView
             x:Name="contactListClosed"
             Grid.Column="4"
@@ -227,7 +230,7 @@
                         Header="Id" />
                     <GridViewColumn
                         Width="auto"
-                        DisplayMemberBinding="{Binding Created}"
+                        DisplayMemberBinding="{Binding Created, StringFormat='yyyy-MM-dd HH:mm'}"
                         Header="Created" />
                     <GridViewColumn
                         Width="auto"

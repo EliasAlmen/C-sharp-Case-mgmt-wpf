@@ -25,7 +25,9 @@ namespace EC05_C_sharp_Case_mgmt_wpf.Contexts
             }
         }
 
+        public DbSet<OwnerEntity> OwnerSql { get; set; }
         public DbSet<CaseEntity> CasesSql { get; set; }
-        public DbSet<CommentEntity> Comments { get; set; }
+        public DbSet<CaseStatusEntity> CaseStatusSql { get; set; }
+        public DbSet<CommentEntity> CommentsSql { get; set; }
     }
 }

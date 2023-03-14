@@ -4,6 +4,7 @@ using EC05_C_sharp_Case_mgmt_wpf.Contexts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace EC05_C_sharp_Case_mgmt_wpf.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20230314113814_NullableFix")]
+    partial class NullableFix
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -30,6 +33,9 @@ namespace EC05_C_sharp_Case_mgmt_wpf.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("CaseId"));
 
+                    b.Property<int>("CommentEntityId")
+                        .HasColumnType("int");
+
                     b.Property<DateTime>("Created")
                         .HasColumnType("datetime2");
 
@@ -40,12 +46,12 @@ namespace EC05_C_sharp_Case_mgmt_wpf.Migrations
                     b.Property<bool>("IsDone")
                         .HasColumnType("bit");
 
-                    b.Property<int>("OwnerEntityOwnerId")
+                    b.Property<int>("OwnerEntityId")
                         .HasColumnType("int");
 
                     b.HasKey("CaseId");
 
-                    b.HasIndex("OwnerEntityOwnerId");
+                    b.HasIndex("OwnerEntityId");
 
                     b.ToTable("CasesSql");
                 });
@@ -111,6 +117,9 @@ namespace EC05_C_sharp_Case_mgmt_wpf.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("OwnerId"));
 
+                    b.Property<int>("CaseEntityId")
+                        .HasColumnType("int");
+
                     b.Property<string>("Email")
                         .IsRequired()
                         .HasMaxLength(200)
@@ -140,7 +149,7 @@ namespace EC05_C_sharp_Case_mgmt_wpf.Migrations
                 {
                     b.HasOne("EC05_C_sharp_Case_mgmt_wpf.MVVM.Models.Entities.OwnerEntity", "OwnerEntity")
                         .WithMany("CaseEntity")
-                        .HasForeignKey("OwnerEntityOwnerId")
+                        .HasForeignKey("OwnerEntityId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
