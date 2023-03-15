@@ -29,22 +29,16 @@ namespace EC05_C_sharp_Case_mgmt_wpf.MVVM.Views
             InitializeComponent();
             this.DataContext = App.Current.Services.GetService<CaseDetailsViewModel>();
         }
-
+        #region OnClosing override
+        /// <summary>
+        /// Found on the internet, had problems with opening multiple window. This fixes it.
+        /// </summary>
+        /// <param name="e"></param>
         protected override void OnClosing(CancelEventArgs e)
         {
             this.Visibility = Visibility.Hidden;
             e.Cancel = true;
         }
-
-        //[RelayCommand]
-        //private void UnlockDetailsView()
-        //{
-        //    tb_firstname.IsEnabled = true;
-        //    tb_lastname.IsEnabled = true;
-        //    tb_email.IsEnabled = true;
-        //    tb_phonenumber.IsEnabled = true;
-        //    tb_description.IsEnabled = true;
-        //    tb_status.IsEnabled = true;
-        //}
+        #endregion
     }
 }

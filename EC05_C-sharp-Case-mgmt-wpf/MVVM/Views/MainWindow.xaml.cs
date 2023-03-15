@@ -39,40 +39,35 @@ namespace EC05_C_sharp_Case_mgmt_wpf
             _addCaseCommentWindow = addCaseComment;
         }
 
+        #region Opens details-window
+        /// <summary>
+        /// Opens details-window.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void ListViewItem_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
             var item = (ListViewItem)sender;
             var caseItem = (CaseEntity)item.DataContext;
-
             _caseDetailsWindow.DataContext = caseItem;
             _caseDetailsWindow.Show();
-
-            //string messageBoxText = 
-            //    $"{caseItem.FirstName}" + " " + $"{caseItem.LastName}\n" +
-            //    $"{caseItem.Email}\n" +
-            //    $"{caseItem.PhoneNumber}\n\n" +
-            //    $"Case description:\n{caseItem.Description}\n\n" +
-            //    $"Case status: {caseItem.IsDone}";
-            //string caption = $"Case Id {caseItem.Id}";
-            //MessageBoxButton button = MessageBoxButton.OK;
-            //MessageBoxImage icon = MessageBoxImage.Information;
-            //MessageBoxResult result;
-            //result = MessageBox.Show(messageBoxText, caption, button, icon);
         }
+        #endregion
 
+        #region Opens comment-window
+        /// <summary>
+        /// Opens comment-window.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            //todo: Fix this..
             var item = (Button)sender;
             var caseItem = (MainViewModel)item.DataContext;
             _addCaseCommentWindow.DataContext = caseItem;
             _addCaseCommentWindow.Show();
-
-            //var item = (ListViewItem)sender;
-            //var caseItem = (CustomerEntity)item.DataContext;
-
-            //_caseDetailsWindow.DataContext = caseItem;
-            //_caseDetailsWindow.Show();
         }
+        #endregion
+
     }
 }

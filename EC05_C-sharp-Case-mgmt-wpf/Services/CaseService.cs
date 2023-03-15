@@ -36,35 +36,6 @@ namespace EC05_C_sharp_Case_mgmt_wpf.Services
                 Status = caseModel.Status
             };
 
-            //var ownerEntity = new OwnerEntity
-            //{
-            //    FirstName = caseModel.FirstName,
-            //    LastName = caseModel.LastName,
-            //    Email = caseModel.Email,
-            //    PhoneNumber = caseModel.PhoneNumber
-                
-            //};
-
-            ////var caseEntity = new CaseEntity
-            ////{
-            ////    OwnerEntityId = ownerEntity.OwnerId,
-            ////};
-
-            ////ownerEntity.CaseEntity = new CaseEntity
-            ////{
-
-            ////};
-
-            //var _caseEntity = await _context.CasesSql.FirstOrDefaultAsync(x => x.Description == caseModel.Description);
-            //if (_caseEntity != null)
-            //    ownerEntity.CaseEntityId = _caseEntity.CaseId;
-            //else
-            //    ownerEntity.CaseEntity = new CaseEntity
-            //    {
-            //        Description = caseModel.Description,
-            //        IsDone = caseModel.IsDone
-            //    };
-
             _context.Add(caseEntity);
             await _context.SaveChangesAsync();
         }

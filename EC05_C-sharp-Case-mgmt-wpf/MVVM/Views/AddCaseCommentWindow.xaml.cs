@@ -25,13 +25,17 @@ namespace EC05_C_sharp_Case_mgmt_wpf.MVVM.Views
         public AddCaseCommentWindow()
         {
             InitializeComponent();
-            //this.DataContext = App.Current.Services.GetService<AddCaseCommentViewModel>();
-
         }
+        #region OnClosing override
+        /// <summary>
+        /// Found on the internet, had problems with opening multiple window. This fixes it.
+        /// </summary>
+        /// <param name="e"></param>
         protected override void OnClosing(CancelEventArgs e)
         {
             this.Visibility = Visibility.Hidden;
             e.Cancel = true;
         }
+        #endregion
     }
 }

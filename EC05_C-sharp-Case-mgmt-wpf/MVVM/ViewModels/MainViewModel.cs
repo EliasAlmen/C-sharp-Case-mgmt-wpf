@@ -27,11 +27,9 @@ namespace EC05_C_sharp_Case_mgmt_wpf.MVVM.ViewModels
             LoadOpenCases();
             LoadClosedCases();
         }
-
-        //todo: In case closed list add column for datetime -> closed.
-        //todo: In case open list add column for pickuped / datetime pickuped
-
-        #region Add case
+        #region ObservableProperties
+        [ObservableProperty]
+        private CaseEntity selectedCaseItem = null!;
         [ObservableProperty]
         private string firstName = string.Empty;
         [ObservableProperty]
@@ -62,7 +60,45 @@ namespace EC05_C_sharp_Case_mgmt_wpf.MVVM.ViewModels
         private bool isDone;
         [ObservableProperty]
         private DateTime created = DateTime.Now;
+        [ObservableProperty]
+        private string status = "Open";
+        [ObservableProperty]
+        private bool lock_firstname;
+        [ObservableProperty]
+        private bool lock_lastname;
+        [ObservableProperty]
+        private bool lock_email;
+        [ObservableProperty]
+        private bool lock_phonenumber;
+        [ObservableProperty]
+        private bool lock_description;
+        [ObservableProperty]
+        private string btn_unlock = "Unlock cases";
+        [ObservableProperty]
+        private bool btn_enable_delete = false;
+        [ObservableProperty]
+        private bool btn_enable_update = false;
+        [ObservableProperty]
+        private bool btn_enable_addComment = false;
+        [ObservableProperty]
+        private string commentTextInput = string.Empty;
+        [ObservableProperty]
+        private string commentAuthorInput = string.Empty;
+        [ObservableProperty]
+        private DateTime commentCreated;
 
+        [ObservableProperty]
+        private string commentText = string.Empty;
+        [ObservableProperty]
+        private string commentAuthor = string.Empty;
+        [ObservableProperty]
+        private int commentEntityId;
+        #endregion
+        #region Add case
+
+        /// <summary>
+        /// Checks fields and adds a case.
+        /// </summary>
         [RelayCommand]
         private async void AddCase()
         {
@@ -102,25 +138,20 @@ namespace EC05_C_sharp_Case_mgmt_wpf.MVVM.ViewModels
 
 
                 // Confirmation MessageBox
-                //MessageBox.Show($"{FirstName}\n{LastName}\n\nAdded.");
+                MessageBox.Show($"Case added.");
                 LoadOpenCases();
 
             }
         }
         #endregion
-
-        #region Load cases
-
-        [ObservableProperty]
-        private string status = "Open";
-
+        #region Load cases OPEN & CLOSED
         /// <summary>
         /// Observable property with INotifyChanged created by source generators
         /// </summary>
         [ObservableProperty]
         public ObservableCollection<CaseEntity> cases = new();
         /// <summary>
-        /// Loads existing Cases from the DataContext
+        /// Loads existing Cases from the DataContext that are NOT done. Also INCLUDES comments,owner,status.
         /// </summary>
         private void LoadOpenCases()
         {
@@ -140,6 +171,9 @@ namespace EC05_C_sharp_Case_mgmt_wpf.MVVM.ViewModels
         /// </summary>
         [ObservableProperty]
         public ObservableCollection<CaseEntity> caseClose = new();
+        /// <summary>
+        /// Loads existing Cases from the DataContext that are ARE closed. ONLY takes cases that are closed.
+        /// </summary>
         private void LoadClosedCases()
         {
             CaseClose.Clear();
@@ -150,7 +184,6 @@ namespace EC05_C_sharp_Case_mgmt_wpf.MVVM.ViewModels
             });
         }
         #endregion
-
         #region Mark case as completed
         /// <summary>
         /// Updates the status with if-states. No solution for checkbox bug. 
@@ -163,7 +196,7 @@ namespace EC05_C_sharp_Case_mgmt_wpf.MVVM.ViewModels
 
             if (caseEntity == null)
             {
-                string messageBoxTextNoItem = "No item selected..?\n\n" + "Please notice that the checkbox is now incorrect.";
+                string messageBoxTextNoItem = "No case selected..?\n\n" + "Please notice that the checkbox is now incorrect.";
                 string captionNoItem = $"Edit";
                 MessageBoxButton buttonNoItem = MessageBoxButton.OK;
                 MessageBoxImage iconNoItem = MessageBoxImage.Error;
@@ -198,10 +231,11 @@ namespace EC05_C_sharp_Case_mgmt_wpf.MVVM.ViewModels
             }
         }
         #endregion
-
         #region Delete & update selected case
-        [ObservableProperty]
-        private CaseEntity selectedCaseItem = null!;
+        /// <summary>
+        /// Deletes selected case in listview
+        /// </summary>
+        /// <param name="caseEntity"></param>
         [RelayCommand]
         private void DeleteSelected(CaseEntity caseEntity)
         {
@@ -227,9 +261,7 @@ namespace EC05_C_sharp_Case_mgmt_wpf.MVVM.ViewModels
             switch (result)
             {
                 case MessageBoxResult.Yes:
-                    //_DataContext.OwnerSql.Remove(ownerEntity);
                     _DataContext.CasesSql.Remove(caseEntity);
-                    //_DataContext.CaseStatusSql.Remove(caseStatusEntity);
                     _DataContext.SaveChanges();
                     LoadOpenCases();
                     LoadClosedCases();
@@ -239,6 +271,10 @@ namespace EC05_C_sharp_Case_mgmt_wpf.MVVM.ViewModels
                     break;
             }
         }
+        /// <summary>
+        /// Updates selected case in listview
+        /// </summary>
+        /// <param name="caseEntity"></param>
         [RelayCommand]
         private void UpdateSelected(CaseEntity caseEntity)
         {
@@ -264,26 +300,10 @@ namespace EC05_C_sharp_Case_mgmt_wpf.MVVM.ViewModels
             }
         }
         #endregion
-
         #region Lock & Unlock
-        [ObservableProperty]
-        private bool lock_firstname;
-        [ObservableProperty]
-        private bool lock_lastname;
-        [ObservableProperty]
-        private bool lock_email;
-        [ObservableProperty]
-        private bool lock_phonenumber;
-        [ObservableProperty]
-        private bool lock_description;
-        [ObservableProperty]
-        private string btn_unlock = "Unlock cases";
-        [ObservableProperty]
-        private bool btn_enable_delete = false;
-        [ObservableProperty]
-        private bool btn_enable_update = false;
-        [ObservableProperty]
-        private bool btn_enable_addComment = false;
+        /// <summary>
+        /// Unlocks buttons to Change or delete case
+        /// </summary>
         [RelayCommand]
         private void UnlockSelected()
         {
@@ -326,61 +346,68 @@ namespace EC05_C_sharp_Case_mgmt_wpf.MVVM.ViewModels
                         break;
                 }
             }
-            
-
-            
         }
         #endregion
-
         #region Pickup case
+        /// <summary>
+        /// Set selected listview item to ongoing-status.
+        /// </summary>
         [RelayCommand]
         public void PickupCase()
         {
-            if (SelectedCaseItem.CaseStatusEntity.Status == "Ongoing")
+            if (SelectedCaseItem == null) 
             {
-                MessageBox.Show("Case is already ongoing!");
+                MessageBox.Show("No case selected!");
             }
-            CaseStatusEntity caseStatusEntity = new()
+            else
             {
-                CaseEntityId = SelectedCaseItem.CaseId,
-                Status = "Ongoing"
-            };
-            _DataContext.CaseStatusSql.Update(caseStatusEntity);
-            _DataContext.SaveChanges();
-            LoadOpenCases();
+                if (SelectedCaseItem.CaseStatusEntity.Status == "Ongoing")
+                {
+                    MessageBox.Show("Case is already ongoing!");
+                }
+                CaseStatusEntity caseStatusEntity = new()
+                {
+                    CaseEntityId = SelectedCaseItem.CaseId,
+                    Status = "Ongoing"
+                };
+                _DataContext.CaseStatusSql.Update(caseStatusEntity);
+                _DataContext.SaveChanges();
+                LoadOpenCases();
+            }
         }
         #endregion
-
         #region Save comment
-        [ObservableProperty]
-        private string commentTextInput = string.Empty;
-        [ObservableProperty]
-        private string commentAuthorInput = string.Empty;
-        [ObservableProperty]
-        private DateTime commentCreated;
-
-        [ObservableProperty]
-        private string commentText = string.Empty;
-        [ObservableProperty]
-        private string commentAuthor = string.Empty;
-        [ObservableProperty]
-        private int commentEntityId;
-
+        /// <summary>
+        /// Match selected listview item and add comment.
+        /// </summary>
         [RelayCommand]
         private void CommentSave()
         {
-            CommentEntity commentEntity = new()
+            if (SelectedCaseItem == null)
             {
-                CaseEntityId = SelectedCaseItem.CaseId,
-                CommentText = CommentTextInput,
-                CommentAuthor = CommentAuthorInput,
-            };
-            _DataContext.CommentsSql.Update(commentEntity);
+                string messageBoxTextNoItem = "No case selected..?\n\n";
+                string captionNoItem = $"Edit";
+                MessageBoxButton buttonNoItem = MessageBoxButton.OK;
+                MessageBoxImage iconNoItem = MessageBoxImage.Error;
+                MessageBoxResult resultNoItem;
+                resultNoItem = MessageBox.Show(messageBoxTextNoItem, captionNoItem, buttonNoItem, iconNoItem);
+            }
+            else
+            {
+                CommentEntity commentEntity = new()
+                {
+                    CaseEntityId = SelectedCaseItem.CaseId,
+                    CommentText = CommentTextInput,
+                    CommentAuthor = CommentAuthorInput,
+                };
+                _DataContext.CommentsSql.Update(commentEntity);
 
-            _DataContext!.SaveChanges();
-            CommentTextInput = string.Empty;
-            CommentAuthorInput = string.Empty;
-            LoadOpenCases();
+                _DataContext!.SaveChanges();
+                CommentTextInput = string.Empty;
+                CommentAuthorInput = string.Empty;
+                LoadOpenCases();
+            }
+            
         }
         #endregion
     }
