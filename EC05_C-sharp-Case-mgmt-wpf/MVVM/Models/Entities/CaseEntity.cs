@@ -13,6 +13,7 @@ namespace EC05_C_sharp_Case_mgmt_wpf.MVVM.Models.Entities
         public int CaseId { get; set; }
         public string Description { get; set; } = string.Empty;
         public DateTime Created { get; set; } = DateTime.Now;
+        public DateTime CaseCompleted { get; set; }
         public bool IsDone { get; set; }
 
 

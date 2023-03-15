@@ -10,7 +10,7 @@
     Title="CaseDetailsWindow"
     Width="800"
     Height="650"
-    d:DataContext="{d:DesignInstance Type=viewmodels:CaseDetailsViewModel}"
+    d:DataContext="{d:DesignInstance Type=viewmodels:MainViewModel}"
     WindowStartupLocation="CenterScreen"
     mc:Ignorable="d">
     <Grid Margin="10">
@@ -29,25 +29,25 @@
                     x:Name="tb_firstname"
                     Margin="5,0,5,10"
                     IsEnabled="False"
-                    Text="{Binding FirstName}" />
+                    Text="{Binding OwnerEntity.FirstName}" />
                 <Label Content="Last name:" FontWeight="Medium" />
                 <TextBox
                     x:Name="tb_lastname"
                     Margin="5,0,5,10"
                     IsEnabled="False"
-                    Text="{Binding LastName}" />
+                    Text="{Binding OwnerEntity.LastName}" />
                 <Label Content="Email:" FontWeight="Medium" />
                 <TextBox
                     x:Name="tb_email"
                     Margin="5,0,5,10"
                     IsEnabled="False"
-                    Text="{Binding Email}" />
+                    Text="{Binding OwnerEntity.Email}" />
                 <Label Content="Phone number:" FontWeight="Medium" />
                 <TextBox
                     x:Name="tb_phonenumber"
                     Margin="5,0,5,10"
                     IsEnabled="False"
-                    Text="{Binding PhoneNumber}" />
+                    Text="{Binding OwnerEntity.PhoneNumber}" />
                 <Label Content="Case description:" FontWeight="Medium" />
                 <TextBox
                     x:Name="tb_description"
@@ -68,7 +68,7 @@
                     x:Name="tb_status"
                     Margin="5,0,5,10"
                     IsEnabled="False"
-                    Text="{Binding IsDone}" />
+                    Text="{Binding CaseStatusEntity.Status}" />
                 <Label Content="Time created:" FontWeight="Medium" />
                 <TextBox
                     x:Name="tb_created"

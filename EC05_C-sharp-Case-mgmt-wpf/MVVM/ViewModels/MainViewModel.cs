@@ -151,35 +151,50 @@ namespace EC05_C_sharp_Case_mgmt_wpf.MVVM.ViewModels
         }
         #endregion
 
-        #region Change status of case
+        #region Mark case as completed
         /// <summary>
-        /// Updates the status with if-states 
+        /// Updates the status with if-states. No solution for checkbox bug. 
         /// </summary>
         /// <param name="customer"></param>
         [RelayCommand]
-        private void ChangeCaseStatus(CaseEntity customer)
+        private void ChangeCaseStatus(CaseEntity caseEntity)
         {
-            string messageBoxText = "Case completed?\n\n";
-            string caption = $"Edit";
-            MessageBoxButton button = MessageBoxButton.YesNo;
-            MessageBoxImage icon = MessageBoxImage.Question;
-            MessageBoxResult result;
-            result = MessageBox.Show(messageBoxText, caption, button, icon);
+            caseEntity = SelectedCaseItem;
 
-            switch (result)
+            if (caseEntity == null)
             {
-                case MessageBoxResult.Yes:
-                        customer.IsDone = true;
+                string messageBoxTextNoItem = "No item selected..?\n\n" + "Please notice that the checkbox is now incorrect.";
+                string captionNoItem = $"Edit";
+                MessageBoxButton buttonNoItem = MessageBoxButton.OK;
+                MessageBoxImage iconNoItem = MessageBoxImage.Error;
+                MessageBoxResult resultNoItem;
+                resultNoItem = MessageBox.Show(messageBoxTextNoItem, captionNoItem, buttonNoItem, iconNoItem);
+            }
+            else
+            {
+                string messageBoxText = "Case completed?\n\n";
+                string caption = $"Edit";
+                MessageBoxButton button = MessageBoxButton.YesNo;
+                MessageBoxImage icon = MessageBoxImage.Question;
+                MessageBoxResult result;
+                result = MessageBox.Show(messageBoxText, caption, button, icon);
+                switch (result)
+                {
+                    case MessageBoxResult.Yes:
+                        caseEntity.IsDone = true;
+                        caseEntity.CaseCompleted = DateTime.Now;
+                        caseEntity.CaseStatusEntity.Status = "Closed";
                         _DataContext.SaveChanges();
                         LoadOpenCases();
                         LoadClosedCases();
-                    break;
-                case MessageBoxResult.No:
-                        customer.IsDone = false;
+                        break;
+                    case MessageBoxResult.No:
+                        caseEntity.IsDone = false;
                         _DataContext.SaveChanges();
                         LoadOpenCases();
                         LoadClosedCases();
-                    break;
+                        break;
+                }
             }
         }
         #endregion
@@ -196,15 +211,6 @@ namespace EC05_C_sharp_Case_mgmt_wpf.MVVM.ViewModels
 
             };
             caseEntity = SelectedCaseItem;
-
-            //CaseEntity caseEntity = new()
-            //{
-            //    OwnerEntityId = SelectedCaseItem.OwnerEntityId
-            //};
-            ////CaseStatusEntity caseStatusEntity = new()
-            ////{
-            ////    CaseEntityId = caseEntity.CaseId
-            ////};
 
             string messageBoxText =
                 "Delete case?\n\n" +
@@ -271,11 +277,13 @@ namespace EC05_C_sharp_Case_mgmt_wpf.MVVM.ViewModels
         [ObservableProperty]
         private bool lock_description;
         [ObservableProperty]
-        private string btn_unlock = "Unlock case";
+        private string btn_unlock = "Unlock cases";
         [ObservableProperty]
         private bool btn_enable_delete = false;
         [ObservableProperty]
         private bool btn_enable_update = false;
+        [ObservableProperty]
+        private bool btn_enable_addComment = false;
         [RelayCommand]
         private void UnlockSelected()
         {
@@ -289,6 +297,7 @@ namespace EC05_C_sharp_Case_mgmt_wpf.MVVM.ViewModels
                 Btn_unlock = "Unlock case";
                 Btn_enable_delete = false;
                 Btn_enable_update = false;
+                Btn_enable_addComment = false;
             }
             else
             {
@@ -310,6 +319,7 @@ namespace EC05_C_sharp_Case_mgmt_wpf.MVVM.ViewModels
                         Btn_unlock = "Lock case";
                         Btn_enable_delete = true;
                         Btn_enable_update = true;
+                        Btn_enable_addComment = true;
                         break;
                     case MessageBoxResult.No:
                         // User pressed No
@@ -319,6 +329,25 @@ namespace EC05_C_sharp_Case_mgmt_wpf.MVVM.ViewModels
             
 
             
+        }
+        #endregion
+
+        #region Pickup case
+        [RelayCommand]
+        public void PickupCase()
+        {
+            if (SelectedCaseItem.CaseStatusEntity.Status == "Ongoing")
+            {
+                MessageBox.Show("Case is already ongoing!");
+            }
+            CaseStatusEntity caseStatusEntity = new()
+            {
+                CaseEntityId = SelectedCaseItem.CaseId,
+                Status = "Ongoing"
+            };
+            _DataContext.CaseStatusSql.Update(caseStatusEntity);
+            _DataContext.SaveChanges();
+            LoadOpenCases();
         }
         #endregion
 
