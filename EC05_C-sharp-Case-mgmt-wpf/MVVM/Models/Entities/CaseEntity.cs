@@ -17,15 +17,12 @@ namespace EC05_C_sharp_Case_mgmt_wpf.MVVM.Models.Entities
         public bool IsDone { get; set; }
 
 
-        //public int CaseStatusEntityId { get; set; }
         public CaseStatusEntity CaseStatusEntity { get; set; } = null!;
 
 
-        //public int OwnerEntityId { get; set; }
         public OwnerEntity OwnerEntity { get; set; } = null!;
 
 
-        //public int CommentEntityId { get; set; }
         public ICollection<CommentEntity> CommentEntity { get; set; } = null!;
     }
 }

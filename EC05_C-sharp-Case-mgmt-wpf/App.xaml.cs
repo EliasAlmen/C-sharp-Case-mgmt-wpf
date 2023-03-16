@@ -3,6 +3,7 @@ using EC05_C_sharp_Case_mgmt_wpf.Helpers;
 using EC05_C_sharp_Case_mgmt_wpf.MVVM.Models;
 using EC05_C_sharp_Case_mgmt_wpf.MVVM.ViewModels;
 using EC05_C_sharp_Case_mgmt_wpf.MVVM.Views;
+using EC05_C_sharp_Case_mgmt_wpf.Services;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;

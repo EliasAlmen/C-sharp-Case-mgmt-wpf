@@ -10,10 +10,16 @@ using Microsoft.EntityFrameworkCore;
 
 namespace EC05_C_sharp_Case_mgmt_wpf.Services
 {
-    internal class CaseService
+    internal static class CaseService
     {
         private static DataContext _context = new();
 
+        #region Add case to db
+        /// <summary>
+        /// Add case!
+        /// </summary>
+        /// <param name="caseModel"></param>
+        /// <returns></returns>
         public static async Task SaveAsync(CaseModel caseModel)
         {
 
@@ -39,23 +45,64 @@ namespace EC05_C_sharp_Case_mgmt_wpf.Services
             _context.Add(caseEntity);
             await _context.SaveChangesAsync();
         }
+        #endregion
 
-        //public static async Task<IEnumerable<CaseModel>> GetAllAsync()
+        // Plan was to use the CaseService more, but I got instance conflict for tracking. Had no time to fix. 
+
+        //#region Save case comment
+        ///// <summary>
+        ///// Save case comment
+        ///// </summary>
+        ///// <param name="commentEntity"></param>
+        ///// <returns></returns>
+        //public static async Task SaveComment(CommentEntity commentEntity)
         //{
-        //    var _customers = new List<CaseModel>();
-        //    foreach (var _customer in await _context.Customers.Include(x => x.Id).ToListAsync())
-        //        _customers.Add(new CaseModel
-        //        {
-        //            Id = _customer.Id,
-        //            FirstName = _customer.FirstName,
-        //            LastName = _customer.LastName,
-        //            Email = _customer.Email,
-        //            PhoneNumber = _customer.PhoneNumber,
-        //            Description = _customer.Description,
-        //            Created = _customer.Created
+        //    _context.CommentsSql.Update(commentEntity);
 
-        //        });
-        //    return _customers;
+        //    await _context.SaveChangesAsync();
         //}
+        //#endregion
+
+        //#region Save case status
+        ///// <summary>
+        ///// Save case status
+        ///// </summary>
+        ///// <param name="caseStatusEntity"></param>
+        ///// <returns></returns>
+        //public static async Task SaveCaseStatus(CaseStatusEntity caseStatusEntity)
+        //{
+        //    _context.CaseStatusSql.Update(caseStatusEntity);
+
+        //    await _context.SaveChangesAsync();
+        //}
+        //#endregion
+
+        //#region Remove case
+        ///// <summary>
+        ///// Remove case
+        ///// </summary>
+        ///// <param name="caseStatusEntity"></param>
+        ///// <returns></returns>
+        //public static async Task RemoveCase(CaseEntity caseEntity)
+        //{
+        //    _context.CasesSql.Remove(caseEntity);
+        //    await _context.SaveChangesAsync();
+        //}
+        //#endregion
+
+        //#region Update case
+        ///// <summary>
+        ///// Update case
+        ///// </summary>
+        ///// <param name="caseStatusEntity"></param>
+        ///// <returns></returns>
+        //public static async Task UpdateCase(CaseEntity caseEntity)
+        //{
+        //    _context.CasesSql.Update(caseEntity);
+
+        //    await _context.SaveChangesAsync();
+        //}
+        //#endregion
+
     }
 }

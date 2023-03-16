@@ -20,8 +20,6 @@ namespace EC05_C_sharp_Case_mgmt_wpf.MVVM.Models.Entities
         [StringLength(13)]
         public string PhoneNumber { get; set; } = string.Empty;
 
-        // This one doent work, it i probably redundant. 
-        //public int CaseEntityId { get; set; }
         public ICollection<CaseEntity> CaseEntity { get; set; } = null!;
 
     }

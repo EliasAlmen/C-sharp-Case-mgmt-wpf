@@ -190,8 +190,10 @@ namespace EC05_C_sharp_Case_mgmt_wpf.MVVM.ViewModels
         /// </summary>
         /// <param name="customer"></param>
         [RelayCommand]
-        private void ChangeCaseStatus(CaseEntity caseEntity)
+        private void ChangeCaseStatus()
         {
+            CaseEntity caseEntity = new();
+
             caseEntity = SelectedCaseItem;
 
             if (caseEntity == null)
@@ -216,13 +218,19 @@ namespace EC05_C_sharp_Case_mgmt_wpf.MVVM.ViewModels
                     case MessageBoxResult.Yes:
                         caseEntity.IsDone = true;
                         caseEntity.CaseCompleted = DateTime.Now;
-                        caseEntity.CaseStatusEntity.Status = "Closed";
+                        caseEntity.CaseStatusEntity = new CaseStatusEntity()
+                        {
+                            CaseEntityId = caseEntity.CaseId,
+                            Status = "Closed"
+                        };
+                        _DataContext.CasesSql.Update(caseEntity);
                         _DataContext.SaveChanges();
                         LoadOpenCases();
                         LoadClosedCases();
                         break;
                     case MessageBoxResult.No:
                         caseEntity.IsDone = false;
+                        _DataContext.CasesSql.Update(caseEntity);
                         _DataContext.SaveChanges();
                         LoadOpenCases();
                         LoadClosedCases();
@@ -237,13 +245,14 @@ namespace EC05_C_sharp_Case_mgmt_wpf.MVVM.ViewModels
         /// </summary>
         /// <param name="caseEntity"></param>
         [RelayCommand]
-        private void DeleteSelected(CaseEntity caseEntity)
+        private void DeleteSelected()
         {
             OwnerEntity ownerEntity = new()
             {
                 OwnerId = SelectedCaseItem.CaseId
 
             };
+            CaseEntity caseEntity = new();
             caseEntity = SelectedCaseItem;
 
             string messageBoxText =
@@ -276,7 +285,7 @@ namespace EC05_C_sharp_Case_mgmt_wpf.MVVM.ViewModels
         /// </summary>
         /// <param name="caseEntity"></param>
         [RelayCommand]
-        private void UpdateSelected(CaseEntity caseEntity)
+        private void UpdateSelected()
         {
             string messageBoxText = "Update case?\n\n";
             string caption = $"Edit";
@@ -288,9 +297,10 @@ namespace EC05_C_sharp_Case_mgmt_wpf.MVVM.ViewModels
             switch (result)
             {
                 case MessageBoxResult.Yes:
+                    CaseEntity caseEntity = new();
                     caseEntity = SelectedCaseItem;
                     _DataContext.CasesSql.Update(caseEntity);
-                    _DataContext.SaveChanges();
+                    _DataContext.SaveChanges(); 
                     LoadOpenCases();
                     LoadClosedCases();
                     UnlockSelected();
@@ -401,8 +411,7 @@ namespace EC05_C_sharp_Case_mgmt_wpf.MVVM.ViewModels
                     CommentAuthor = CommentAuthorInput,
                 };
                 _DataContext.CommentsSql.Update(commentEntity);
-
-                _DataContext!.SaveChanges();
+                _DataContext.SaveChanges();
                 CommentTextInput = string.Empty;
                 CommentAuthorInput = string.Empty;
                 LoadOpenCases();

@@ -17,7 +17,6 @@ namespace EC05_C_sharp_Case_mgmt_wpf.MVVM.Models
         public string LastName { get; set; } = string.Empty;
         public string Email { get; set; } = string.Empty;
         public string PhoneNumber { get; set; } = string.Empty;
-        //public CaseEntity CaseEntity { get; set; }
 
 
         // Case
